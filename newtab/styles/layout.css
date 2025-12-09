@@ -150,6 +150,7 @@
     border-radius: 8px;
     border: 1px solid var(--border-color);
     background: var(--surface-color);
+    color: var(--text-color);
     cursor: pointer;
     font-weight: 600;
 }
@@ -193,10 +194,24 @@
 .btn-secondary {
     background: var(--panel-bg);
     border: 1px solid var(--border-color);
+    color: var(--text-color);
 }
 
 .btn-small {
     padding: 6px 10px;
+    color: var(--text-color);
+    font-weight: 600;
+}
+
+.btn-icon {
+    background: var(--panel-bg);
+    border: 1px solid var(--border-color);
+    color: var(--text-color);
+    font-size: 18px;
+    padding: 8px 12px;
+    /*display: flex;
+    align-items: center;
+    justify-content: center;*/
 }
 
 /* Diff */
@@ -215,7 +230,7 @@
 .diff-header {
     display: flex;
     justify-content: space-between;
-    align-items: flex-start;
+    align-items: center;
     gap: 12px;
     padding-bottom: 8px;
     border-bottom: 1px solid var(--border-color);
@@ -243,6 +258,7 @@
     border-radius: 10px;
     border: 1px solid var(--border-color);
     background: var(--surface-color);
+    color: var(--text-color);
     font-weight: 600;
     font-size: 12px;
 }
@@ -250,13 +266,17 @@
 .diff-header-actions .btn-small {
     border: 1px solid var(--border-color);
     background: var(--surface-color);
+    color: var(--text-color);
     border-radius: 10px;
+    font-weight: 600;
 }
 
 .summary-stats {
     display: flex;
     gap: 10px;
     flex-wrap: wrap;
+    justify-content: center;
+    flex: 1;
 }
 
 .stat-item {

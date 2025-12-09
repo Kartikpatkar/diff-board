@@ -39,6 +39,19 @@
 }
 
 /* ============================================================
+   TOGGLE CONTEXT LINES (Show Only Differences by Default)
+============================================================ */
+/* Hide unchanged lines by default - show only differences */
+#diff2html-output.show-diff-only tbody tr:not(.has-diff):not(.d2h-info) {
+    display: none !important;
+}
+
+/* Show all lines when toggle is active */
+#diff2html-output.show-all tbody tr {
+    display: table-row !important;
+}
+
+/* ============================================================
    DARK MODE — Diff2Html THEME FIX
 ============================================================ */
 body.dark-theme #diff2html-output .d2h-wrapper {

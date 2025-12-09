@@ -227,6 +227,18 @@ document.addEventListener("DOMContentLoaded", () => {
         if (modifiedEl) modifiedEl.textContent = stats.modified ?? 0;
     }
 
+    function markDiffRows() {
+        // Mark table rows that contain added or removed lines
+        const rows = diffOutput.querySelectorAll('tbody tr');
+        rows.forEach(row => {
+            const hasIns = row.querySelector('.d2h-ins');
+            const hasDel = row.querySelector('.d2h-del');
+            if (hasIns || hasDel) {
+                row.classList.add('has-diff');
+            }
+        });
+    }
+
 
 
     /* ============================================================
@@ -269,6 +281,19 @@ document.addEventListener("DOMContentLoaded", () => {
         diffOutput.innerHTML = html;
         updateSummary(stats);
 
+        // Mark rows that contain differences
+        markDiffRows();
+
+        // Set default view to show all lines
+        diffOutput.classList.remove("show-diff-only");
+        diffOutput.classList.add("show-all");
+        
+        // Update toggle button text
+        const toggleBtn = document.getElementById("toggle-context");
+        if (toggleBtn) {
+            toggleBtn.textContent = "Show Diff Only";
+        }
+
         // Setup collapse (but DO NOT auto-collapse anything)
         addCollapseControls();
 
@@ -277,6 +302,29 @@ document.addEventListener("DOMContentLoaded", () => {
         switchTab("diff");
 
         showToast("Comparison Complete", "Diff generated successfully", "success");
+    });
+
+
+    /* ============================================================
+       TOGGLE CONTEXT LINES (Show All vs Show Only Differences)
+    ============================================================ */
+    safeBind("toggle-context", () => {
+        const toggleBtn = document.getElementById("toggle-context");
+        const isShowingAll = diffOutput.classList.contains("show-all");
+
+        if (isShowingAll) {
+            // Switch to show only differences
+            diffOutput.classList.remove("show-all");
+            diffOutput.classList.add("show-diff-only");
+            toggleBtn.textContent = "Show All";
+            showToast("View Changed", "Showing only differences", "info");
+        } else {
+            // Switch to show all lines
+            diffOutput.classList.remove("show-diff-only");
+            diffOutput.classList.add("show-all");
+            toggleBtn.textContent = "Show Diff Only";
+            showToast("View Changed", "Showing all lines", "info");
+        }
     });
 
 });
