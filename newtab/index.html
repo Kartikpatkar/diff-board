@@ -7,7 +7,9 @@
     <title>DiffBoard – Code Comparison Tool</title>
 
     <!-- Fonts -->
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+    <link
+        href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500;600&display=swap"
+        rel="stylesheet">
 
     <!-- Base Styles -->
     <link rel="stylesheet" href="index.css" />
@@ -16,12 +18,14 @@
     <link rel="stylesheet" href="styles/layout.css" />
     <link rel="stylesheet" href="styles/theme.css" />
     <link rel="stylesheet" href="styles/diff.css" />
+    <link rel="stylesheet" href="styles/toasts.css">
 
     <!-- Diff2Html Styles -->
     <link rel="stylesheet" href="libs/diff2html/diff2html.min.css" />
 </head>
 
 <body class="light-theme">
+    <div id="toastContainer" class="toast-container"></div>
 
     <div class="app-container">
 
@@ -41,8 +45,11 @@
 
         <!-- TABS -->
         <div class="tabs">
-            <button class="tab-btn active" data-tab="editors-tab">Editors</button>
-            <button class="tab-btn" data-tab="diff-tab" id="diff-tab-btn" disabled>Diff</button>
+            <div class="tab-buttons">
+                <button class="tab-btn active" data-tab="editors-tab" id="editors-tab-btn">Editors</button>
+                <button class="tab-btn" data-tab="diff-tab" id="diff-tab-btn">Diff</button>
+            </div>
+            <button id="compare-btn" class="compare-btn">Compare</button>
         </div>
 
         <!-- TAB CONTENT: EDITORS -->
@@ -50,37 +57,51 @@
 
             <div class="editors-container">
                 <div class="editor-panel">
-                    <div class="editor-header">Original Code</div>
+                    <div class="editor-header">
+                        Original Code
+                        <button class="copy-btn" id="copy-left">Copy</button>
+                    </div>
                     <textarea id="left-editor" class="code-editor" placeholder="Paste original code here..."></textarea>
                 </div>
 
                 <div class="editor-panel">
-                    <div class="editor-header">Modified Code</div>
-                    <textarea id="right-editor" class="code-editor" placeholder="Paste modified code here..."></textarea>
+                    <div class="editor-header">
+                        Modified Code
+                        <button class="copy-btn" id="copy-right">Copy</button>
+                    </div>
+                    <textarea id="right-editor" class="code-editor"
+                        placeholder="Paste modified code here..."></textarea>
                 </div>
-            </div>
-
-            <div class="editors-actions">
-                <button class="btn btn-primary" id="compare-btn">Compare</button>
             </div>
 
         </div>
 
         <!-- TAB CONTENT: DIFF -->
         <div id="diff-tab" class="tab-content">
+            <div class="diff-card">
+                <div class="diff-header">
+                    <div>
+                        <div class="diff-title">Comparison Results</div>
+                        <div class="diff-subtitle">Side-by-side diff with full context</div>
+                    </div>
+                    <div class="diff-header-actions">
+                        <button class="copy-btn" id="copy-diff">Copy All</button>
+                        <button class="copy-btn" id="copy-added">Copy +</button>
+                        <button class="copy-btn" id="copy-removed">Copy –</button>
+                        <button class="btn btn-small" id="back-to-editors">← Back</button>
+                    </div>
+                </div>
 
-            <div class="diff-header">
-                <span class="diff-title">Comparison Results</span>
-                <button class="btn btn-small" id="back-to-editors">← Back</button>
+                <div class="summary-stats">
+                    <div class="stat-item stat-added">+ <span id="added-count">0</span></div>
+                    <div class="stat-item stat-removed">– <span id="removed-count">0</span></div>
+                    <div class="stat-item stat-modified">~ <span id="modified-count">0</span></div>
+                </div>
+
+                <div class="diff-output">
+                    <div id="diff2html-output"></div>
+                </div>
             </div>
-
-            <div class="summary-stats">
-                <div class="stat-item stat-added">+ <span id="added-count">0</span></div>
-                <div class="stat-item stat-removed">– <span id="removed-count">0</span></div>
-                <div class="stat-item stat-modified">~ <span id="modified-count">0</span></div>
-            </div>
-
-            <div id="diff2html-output"></div>
 
         </div>
 
@@ -89,6 +110,7 @@
     <!-- Required Libraries -->
     <script src="libs/jsdiff/jsdiff.min.js"></script>
     <script src="libs/diff2html/diff2html.min.js"></script>
+    <script src="utils/toast.js"></script>
 
     <!-- App Logic -->
     <script src="index.js"></script>

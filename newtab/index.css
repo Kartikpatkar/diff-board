@@ -14,3 +14,48 @@ body {
     height: 100%;
     font-family: 'Inter', sans-serif;
 }
+
+.copy-btn {
+    background: var(--secondary-surface);
+    border: 1px solid var(--secondary-border);
+    color: var(--text-color);
+    padding: 4px 10px;
+    font-size: 12px;
+    border-radius: 6px;
+    cursor: pointer;
+    transition: 0.2s;
+    margin-left: auto;
+}
+
+.copy-btn:hover {
+    background: var(--secondary-hover);
+}
+
+.editor-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.compare-btn {
+    padding: 10px 16px;
+    background: linear-gradient(90deg,#2563eb,#06b6d4);
+    color: #fff;
+    border-radius: 10px;
+    font-weight: 700;
+    cursor: pointer;
+    border: none;
+    box-shadow: 0 10px 25px rgba(37, 99, 235, 0.3);
+    transition: transform 0.15s ease, box-shadow 0.15s ease;
+    margin-left: auto;
+}
+
+.compare-btn:hover {
+    transform: translateY(-1px);
+    box-shadow: 0 12px 28px rgba(37, 99, 235, 0.35);
+}
+
+.compare-btn:active {
+    transform: translateY(0);
+    box-shadow: 0 10px 25px rgba(37, 99, 235, 0.3);
+}

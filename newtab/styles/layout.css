@@ -23,6 +23,7 @@
     background: linear-gradient(90deg, #06b6d4, #7c3aed);
     -webkit-text-fill-color: transparent;
     -webkit-background-clip: text;
+    background-clip: text;
 }
 
 .app-tagline {
@@ -33,10 +34,17 @@
 /* Tabs */
 .tabs {
     display: flex;
-    gap: 8px;
+    align-items: center;
+    gap: 10px;
+    justify-content: space-between;
     padding: 8px 12px;
     background: var(--surface-color);
     border-bottom: 1px solid var(--border-color);
+}
+
+.tab-buttons {
+    display: flex;
+    gap: 8px;
 }
 
 .tab-btn {
@@ -85,10 +93,35 @@
 }
 
 /* Editors */
+.section-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 12px 4px 6px;
+}
+
+.section-title {
+    font-weight: 700;
+    font-size: 16px;
+}
+
+.section-subtitle {
+    font-size: 12px;
+    color: var(--muted-color);
+}
+
+.pill {
+    padding: 6px 12px;
+    border-radius: 999px;
+    border: 1px solid var(--border-color);
+    background: var(--surface-color);
+    font-size: 12px;
+}
+
 .editors-container {
     display: flex;
     gap: 12px;
-    height: calc(100vh - 220px);
+    height: calc(100vh - 180px);
 }
 
 .editor-panel {
@@ -97,11 +130,27 @@
     flex-direction: column;
     background: var(--panel-bg);
     border: 1px solid var(--border-color);
-    border-radius: 10px;
+    border-radius: 12px;
+    box-shadow: 0 10px 30px rgba(0,0,0,0.06);
+    overflow: hidden;
 }
 
 .editor-header {
-    padding: 12px;
+    padding: 12px 14px;
+    font-weight: 700;
+    font-size: 14px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    border-bottom: 1px solid var(--border-color);
+}
+
+.editor-header .copy-btn {
+    padding: 6px 10px;
+    border-radius: 8px;
+    border: 1px solid var(--border-color);
+    background: var(--surface-color);
+    cursor: pointer;
     font-weight: 600;
 }
 
@@ -111,9 +160,18 @@
     border: none;
     resize: none;
     font-family: 'JetBrains Mono', monospace;
+    font-size: 13px;
+    line-height: 1.45;
+    background: transparent;
 }
 
-/* Buttons */
+@media (max-width: 960px) {
+    .editors-container {
+        flex-direction: column;
+        height: auto;
+    }
+}
+
 .btn {
     padding: 10px 18px;
     border-radius: 10px;
@@ -142,9 +200,83 @@
 }
 
 /* Diff */
+.diff-card {
+    background: var(--panel-bg);
+    border: 1px solid var(--border-color);
+    border-radius: 12px;
+    box-shadow: 0 10px 30px rgba(0,0,0,0.06);
+    padding: 12px 14px 16px;
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+    height: 100%;
+}
+
 .diff-header {
     display: flex;
     justify-content: space-between;
-    padding: 12px;
+    align-items: flex-start;
+    gap: 12px;
+    padding-bottom: 8px;
     border-bottom: 1px solid var(--border-color);
+}
+
+.diff-title {
+    font-weight: 700;
+    font-size: 16px;
+}
+
+.diff-subtitle {
+    font-size: 12px;
+    color: var(--muted-color);
+    margin-top: 2px;
+}
+
+.diff-header-actions {
+    display: flex;
+    gap: 10px;
+    align-items: center;
+}
+
+.diff-header-actions .copy-btn {
+    padding: 8px 12px;
+    border-radius: 10px;
+    border: 1px solid var(--border-color);
+    background: var(--surface-color);
+    font-weight: 600;
+    font-size: 12px;
+}
+
+.diff-header-actions .btn-small {
+    border: 1px solid var(--border-color);
+    background: var(--surface-color);
+    border-radius: 10px;
+}
+
+.summary-stats {
+    display: flex;
+    gap: 10px;
+    flex-wrap: wrap;
+}
+
+.stat-item {
+    padding: 10px 12px;
+    border-radius: 10px;
+    background: var(--surface-color);
+    border: 1px solid var(--border-color);
+    font-weight: 700;
+    min-width: 64px;
+    text-align: center;
+}
+
+.stat-added { color: #16a34a; }
+.stat-removed { color: #dc2626; }
+.stat-modified { color: #ea580c; }
+
+.diff-output {
+    border: 1px solid var(--border-color);
+    border-radius: 10px;
+    overflow: auto;
+    background: var(--surface-color);
+    flex: 1;
 }

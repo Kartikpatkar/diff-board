@@ -35,12 +35,21 @@
 #diff2html-output .d2h-code-line,
 #diff2html-output .d2h-code-side-line {
     overflow: visible !important;
+    padding: 0 1.5em;
 }
 
 /* ============================================================
    DARK MODE — Diff2Html THEME FIX
 ============================================================ */
 body.dark-theme #diff2html-output .d2h-wrapper {
+    background: var(--panel-bg) !important;
+}
+
+body.dark-theme #diff2html-output table {
+    background: var(--panel-bg) !important;
+}
+
+body.dark-theme #diff2html-output table tbody {
     background: var(--panel-bg) !important;
 }
 
@@ -56,9 +65,27 @@ body.dark-theme #diff2html-output .d2h-info {
 }
 
 body.dark-theme #diff2html-output .d2h-code-linenumber,
-body.dark-theme #diff2html-output .d2h-code-line {
+body.dark-theme #diff2html-output .d2h-code-line,
+body.dark-theme #diff2html-output .d2h-code-side-linenumber,
+body.dark-theme #diff2html-output .d2h-code-side-line {
     background: var(--panel-bg) !important;
     color: var(--text-color) !important;
+}
+
+/* Blank lines and table cells */
+body.dark-theme #diff2html-output table tbody tr {
+    background: var(--panel-bg) !important;
+}
+
+body.dark-theme #diff2html-output table tbody td {
+    background: var(--panel-bg) !important;
+    color: var(--text-color) !important;
+}
+
+/* Ensure blank lines (empty cells) get dark background */
+body.dark-theme #diff2html-output .d2h-code-line-ctn,
+body.dark-theme #diff2html-output .d2h-code-side-line-ctn {
+    background: var(--panel-bg) !important;
 }
 
 /* Added lines */
