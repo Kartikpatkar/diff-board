@@ -1,0 +1,33 @@
+/* Light Mode */
+:root {
+    --bg-color: #f7f9fc;
+    --text-color: #1e293b;
+    --surface-color: rgba(255,255,255,0.7);
+    --border-color: rgba(150,150,150,0.2);
+    --panel-bg: rgba(255,255,255,0.85);
+}
+
+/* Dark Mode */
+body.dark-theme {
+    --bg-color: #0f0f23;
+    --text-color: #e5e7eb;
+    --surface-color: rgba(25,25,40,0.8);
+    --border-color: rgba(255,255,255,0.12);
+    --panel-bg: rgba(35,40,60,0.7);
+}
+
+body {
+    background: var(--bg-color);
+    color: var(--text-color);
+}
+
+textarea.code-editor {
+    background: var(--panel-bg);
+    color: var(--text-color);
+}
+
+/* Diff2Html Dark Fix */
+body.dark-theme #diff2html-output {
+    background: #0d1117 !important;
+    color: #c9d1d9 !important;
+}

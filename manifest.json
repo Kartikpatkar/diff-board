@@ -1,0 +1,33 @@
+{
+    "manifest_version": 3,
+    "name": "DiffBoard",
+    "description": "A developer-friendly code comparison tool.",
+    "version": "1.0.0",
+
+    "permissions": ["storage", "contextMenus"],
+    "host_permissions": ["<all_urls>"],
+
+    "background": {
+        "service_worker": "background/service-worker.js"
+    },
+
+    "action": {
+        "default_title": "Open DiffBoard"
+    },
+
+    "web_accessible_resources": [{
+        "resources": [
+            "newtab/libs/jsdiff/jsdiff.min.js",
+            "newtab/libs/diff2html/diff2html.min.js",
+            "newtab/libs/diff2html/diff2html.min.css"
+        ],
+        "matches": ["<all_urls>"]
+    }],
+
+    "icons": {
+        "16": "assets/icons/logo.png",
+        "32": "assets/icons/logo.png",
+        "48": "assets/icons/logo.png",
+        "128": "assets/icons/logo.png"
+    }
+}

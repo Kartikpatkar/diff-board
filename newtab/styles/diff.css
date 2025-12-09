@@ -1,0 +1,82 @@
+/* ============================================================
+   DIFF2HTML — GLOBAL FIXES
+============================================================ */
+
+/* Ensure full expansion */
+#diff2html-output,
+#diff2html-output .d2h-wrapper {
+    height: auto !important;
+    max-height: none !important;
+    overflow: visible !important;
+}
+
+#diff2html-output table {
+    width: 100% !important;
+    table-layout: auto !important;
+}
+
+/* Remove unnecessary overflow wrappers */
+#diff2html-output .d2h-files-diff,
+#diff2html-output .d2h-file-wrapper {
+    max-height: none !important;
+    overflow: visible !important;
+}
+
+/* Fix line numbers */
+#diff2html-output .d2h-code-linenumber,
+#diff2html-output .d2h-code-side-linenumber {
+    position: relative !important;
+    background: transparent !important;
+    color: var(--text-color) !important;
+    display: table-cell !important;
+}
+
+/* Ensure code scrolls together */
+#diff2html-output .d2h-code-line,
+#diff2html-output .d2h-code-side-line {
+    overflow: visible !important;
+}
+
+/* ============================================================
+   DARK MODE — Diff2Html THEME FIX
+============================================================ */
+body.dark-theme #diff2html-output .d2h-wrapper {
+    background: var(--panel-bg) !important;
+}
+
+body.dark-theme #diff2html-output .d2h-file-header {
+    background: var(--surface-color) !important;
+    color: var(--text-color) !important;
+    border-color: var(--border-color) !important;
+}
+
+body.dark-theme #diff2html-output .d2h-info {
+    background: rgba(60, 70, 90, 0.5) !important;
+    color: var(--text-color) !important;
+}
+
+body.dark-theme #diff2html-output .d2h-code-linenumber,
+body.dark-theme #diff2html-output .d2h-code-line {
+    background: var(--panel-bg) !important;
+    color: var(--text-color) !important;
+}
+
+/* Added lines */
+body.dark-theme #diff2html-output .d2h-ins {
+    background: rgba(16, 185, 129, 0.18) !important;
+    border-color: #10b981 !important;
+}
+
+body.dark-theme #diff2html-output ins {
+    color: #10b981 !important;
+}
+
+/* Removed lines */
+body.dark-theme #diff2html-output .d2h-del {
+    background: rgba(239, 68, 68, 0.18) !important;
+    border-color: #ef4444 !important;
+}
+
+body.dark-theme #diff2html-output del {
+    color: #ef4444 !important;
+}

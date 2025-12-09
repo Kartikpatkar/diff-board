@@ -1,0 +1,150 @@
+/* Container */
+.app-container {
+    display: flex;
+    flex-direction: column;
+    height: 100vh;
+}
+
+/* Toolbar */
+.toolbar {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 10px 18px;
+    background: var(--surface-color);
+    border-bottom: 1px solid var(--border-color);
+    backdrop-filter: blur(8px);
+}
+
+/* Branding */
+.app-title {
+    font-size: 20px;
+    font-weight: 700;
+    background: linear-gradient(90deg, #06b6d4, #7c3aed);
+    -webkit-text-fill-color: transparent;
+    -webkit-background-clip: text;
+}
+
+.app-tagline {
+    font-size: 12px;
+    opacity: 0.7;
+}
+
+/* Tabs */
+.tabs {
+    display: flex;
+    gap: 8px;
+    padding: 8px 12px;
+    background: var(--surface-color);
+    border-bottom: 1px solid var(--border-color);
+}
+
+.tab-btn {
+    position: relative;
+    padding: 10px 18px;
+    background: transparent;
+    border: none;
+    cursor: pointer;
+    font-weight: 600;
+    color: var(--text-color);
+    transition: all 0.2s ease;
+}
+
+.tab-btn.active {
+    color: #2563eb;
+}
+
+.tab-btn.active::after {
+    content: "";
+    position: absolute;
+    left: 50%;
+    bottom: -6px;
+    transform: translateX(-50%);
+    width: 50%;
+    height: 3px;
+    background: linear-gradient(90deg,#2563eb,#06b6d4);
+    border-radius: 3px;
+}
+
+/* Tab Content */
+.tab-content {
+    display: none;
+    height: calc(100vh - 130px);
+    padding: 12px;
+    overflow-y: auto;
+    animation: fadeIn 0.2s ease;
+}
+
+.tab-content.active {
+    display: block;
+}
+
+@keyframes fadeIn {
+    from { opacity: 0; transform: translateY(6px); }
+    to   { opacity: 1; transform: translateY(0); }
+}
+
+/* Editors */
+.editors-container {
+    display: flex;
+    gap: 12px;
+    height: calc(100vh - 220px);
+}
+
+.editor-panel {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    background: var(--panel-bg);
+    border: 1px solid var(--border-color);
+    border-radius: 10px;
+}
+
+.editor-header {
+    padding: 12px;
+    font-weight: 600;
+}
+
+.code-editor {
+    flex: 1;
+    padding: 12px;
+    border: none;
+    resize: none;
+    font-family: 'JetBrains Mono', monospace;
+}
+
+/* Buttons */
+.btn {
+    padding: 10px 18px;
+    border-radius: 10px;
+    border: none;
+    cursor: pointer;
+    font-weight: 600;
+    transition: 0.2s ease;
+}
+
+.btn-primary {
+    background: linear-gradient(90deg,#2563eb,#06b6d4);
+    color: #fff;
+}
+
+.btn-primary:hover {
+    transform: translateY(-2px);
+}
+
+.btn-secondary {
+    background: var(--panel-bg);
+    border: 1px solid var(--border-color);
+}
+
+.btn-small {
+    padding: 6px 10px;
+}
+
+/* Diff */
+.diff-header {
+    display: flex;
+    justify-content: space-between;
+    padding: 12px;
+    border-bottom: 1px solid var(--border-color);
+}
