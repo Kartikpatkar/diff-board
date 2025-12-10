@@ -58,16 +58,48 @@
             <div class="editors-container">
                 <div class="editor-panel">
                     <div class="editor-header">
-                        Original Code
-                        <button class="copy-btn" id="copy-left">Copy</button>
+                        <span></span>Original Code</span>
+                        <div class="editor-actions">
+                            <button class="format-btn" id="format-left" title="Format Code">
+                                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                    <polyline points="16 3 21 3 21 8"></polyline>
+                                    <line x1="4" y1="20" x2="21" y2="3"></line>
+                                    <polyline points="21 16 21 21 16 21"></polyline>
+                                    <line x1="15" y1="15" x2="21" y2="21"></line>
+                                    <line x1="4" y1="4" x2="9" y2="9"></line>
+                                </svg>
+                            </button>
+                            <button class="copy-btn" id="copy-left" title="Copy to Clipboard">
+                                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                    <rect x="9" y="9" width="13" height="13" rx="2" ry="2"></rect>
+                                    <path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"></path>
+                                </svg>
+                            </button>
+                        </div>
                     </div>
                     <textarea id="left-editor" class="code-editor" placeholder="Paste original code here..."></textarea>
                 </div>
 
                 <div class="editor-panel">
                     <div class="editor-header">
-                        Modified Code
-                        <button class="copy-btn" id="copy-right">Copy</button>
+                        <span>Modified Code</span>
+                        <div class="editor-actions">
+                            <button class="format-btn" id="format-right" title="Format Code">
+                                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                    <polyline points="16 3 21 3 21 8"></polyline>
+                                    <line x1="4" y1="20" x2="21" y2="3"></line>
+                                    <polyline points="21 16 21 21 16 21"></polyline>
+                                    <line x1="15" y1="15" x2="21" y2="21"></line>
+                                    <line x1="4" y1="4" x2="9" y2="9"></line>
+                                </svg>
+                            </button>
+                            <button class="copy-btn" id="copy-right" title="Copy to Clipboard">
+                                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                    <rect x="9" y="9" width="13" height="13" rx="2" ry="2"></rect>
+                                    <path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"></path>
+                                </svg>
+                            </button>
+                        </div>
                     </div>
                     <textarea id="right-editor" class="code-editor"
                         placeholder="Paste modified code here..."></textarea>
@@ -90,11 +122,44 @@
                         <div class="stat-item stat-modified">~ <span id="modified-count">0</span></div>
                     </div>
                     <div class="diff-header-actions">
-                        <button class="btn btn-small" id="toggle-context">Show All</button>
-                        <button class="copy-btn" id="copy-diff">Copy All</button>
-                        <button class="copy-btn" id="copy-added">Copy +</button>
-                        <button class="copy-btn" id="copy-removed">Copy –</button>
-                        <button class="btn btn-small" id="back-to-editors">← Back</button>
+                        <button class="btn btn-small btn-icon" id="toggle-context" title="Toggle Context">
+                            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                <path d="M21 10H7"></path>
+                                <path d="M21 6H3"></path>
+                                <path d="M21 14H3"></path>
+                                <path d="M17 18H3"></path>
+                            </svg>
+                            <span>Show All</span>
+                        </button>
+                        <div class="divider"></div>
+                        <button class="btn btn-small btn-icon" id="copy-diff" title="Copy All">
+                            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                <rect x="9" y="9" width="13" height="13" rx="2" ry="2"></rect>
+                                <path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"></path>
+                            </svg>
+                            <span>Copy All</span>
+                        </button>
+                        <button class="btn btn-small btn-icon btn-success" id="copy-added" title="Copy Added Lines">
+                            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                <line x1="12" y1="5" x2="12" y2="19"></line>
+                                <line x1="5" y1="12" x2="19" y2="12"></line>
+                            </svg>
+                            <span>Copy +</span>
+                        </button>
+                        <button class="btn btn-small btn-icon btn-danger" id="copy-removed" title="Copy Removed Lines">
+                            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                <line x1="5" y1="12" x2="19" y2="12"></line>
+                            </svg>
+                            <span>Copy –</span>
+                        </button>
+                        <div class="divider"></div>
+                        <button class="btn btn-small btn-icon" id="back-to-editors" title="Back to Editors">
+                            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                <line x1="19" y1="12" x2="5" y2="12"></line>
+                                <polyline points="12 19 5 12 12 5"></polyline>
+                            </svg>
+                            <span>Back</span>
+                        </button>
                     </div>
                 </div>
 

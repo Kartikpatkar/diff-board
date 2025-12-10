@@ -93,6 +93,234 @@ document.addEventListener("DOMContentLoaded", () => {
     safeBind("diff-tab-btn", () => switchTab("diff"));
     safeBind("back-to-editors", () => switchTab("editors"));
 
+    /* ============================================================
+       CODE FORMATTING
+    ============================================================ */
+    function formatCode(textarea) {
+        const code = textarea.value.trim();
+        if (!code) return;
+
+        // Try to detect language based on content
+        const language = detectLanguage(code);
+
+        try {
+            switch (language) {
+                case 'json':
+                    const parsed = JSON.parse(code);
+                    textarea.value = JSON.stringify(parsed, null, 2);
+                    showToast('JSON formatted successfully!', 'success');
+                    break;
+
+                case 'javascript':
+                    textarea.value = formatJavaScript(code);
+                    showToast('JavaScript formatted!', 'success');
+                    break;
+
+                case 'html':
+                    textarea.value = formatHTML(code);
+                    showToast('HTML formatted!', 'success');
+                    break;
+
+                case 'css':
+                    textarea.value = formatCSS(code);
+                    showToast('CSS formatted!', 'success');
+                    break;
+
+                default:
+                    // Try generic formatting
+                    textarea.value = formatGeneric(code);
+                    showToast('Code formatted!', 'info');
+            }
+        } catch (err) {
+            console.error('Formatting error:', err);
+            showToast('Could not format code. Unsupported format or syntax error.', 'error');
+        }
+    }
+
+    function detectLanguage(code) {
+        // Check for JSON
+        try {
+            JSON.parse(code);
+            return 'json';
+        } catch (e) {
+            // Not JSON, continue detection
+        }
+
+        // Check for HTML
+        if (/<[a-z][\s\S]*>/i.test(code)) {
+            return 'html';
+        }
+
+        // Check for CSS
+        if (/\{[^{}]*\}/.test(code) && /[a-zA-Z-]+\s*:/.test(code)) {
+            return 'css';
+        }
+
+        // Default to JavaScript for code with common JS patterns
+        if (/(function|const|let|var|=>|import|export|class)\s+/.test(code)) {
+            return 'javascript';
+        }
+
+        return 'unknown';
+    }
+
+    function formatJavaScript(code) {
+        // Enhanced JavaScript formatting
+        return code
+            // Normalize whitespace
+            .replace(/\s*([{}()[\]=,;:+\-*/%&|^~!<>?])\s*/g, ' $1 ')
+            .replace(/\s+/g, ' ')
+            .trim()
+            // Add newlines
+            .replace(/([;{}])\s*/g, '$1\n')
+            .replace(/([^\{\}])\{/g, '$1 {')
+            .replace(/\}\s*/g, '}\n')
+            // Handle indentation
+            .split('\n')
+            .map((line, i, arr) => {
+                line = line.trim();
+                // Handle indentation
+                const indent = line.match(/^(\s*)/)[0].length;
+                if (line.endsWith('{') || line.endsWith('[')) {
+                    return '    '.repeat(indent) + line;
+                }
+                if (line.endsWith('}') || line.endsWith(']')) {
+                    return '    '.repeat(Math.max(0, indent - 4)) + line;
+                }
+                return '    '.repeat(indent) + line;
+            })
+            .join('\n')
+            // Clean up
+            .replace(/\n{3,}/g, '\n\n')
+            .trim();
+    }
+
+    function formatHTML(code) {
+        // Basic HTML formatting
+        let indent = 0;
+        return code
+            .replace(/</g, '\n<')
+            .replace(/>/g, '>\n')
+            .split('\n')
+            .map(line => {
+                line = line.trim();
+                if (!line) return '';
+
+                if (line.startsWith('</')) {
+                    indent = Math.max(0, indent - 4);
+                }
+
+                const result = ' '.repeat(indent) + line;
+
+                if (line.startsWith('<') && !line.startsWith('</') && !line.endsWith('/>')) {
+                    indent += 4;
+                }
+
+                return result;
+            })
+            .filter(line => line.trim())
+            .join('\n');
+    }
+
+    function formatCSS(code) {
+        // Remove all existing whitespace
+        let formatted = code.replace(/\s+/g, ' ').trim();
+
+        // Add newlines and proper indentation
+        let indent = 0;
+        let inRule = false;
+        let inMedia = false;
+
+        return formatted
+            // Handle @ rules
+            .replace(/(@[^{]+\{)/g, '\n$1\n')
+            // Handle closing braces
+            .replace(/\}/g, '\n}\n')
+            // Handle opening braces
+            .replace(/\{/g, ' {\n')
+            // Handle semicolons
+            .replace(/;/g, ';\n')
+            // Split into lines
+            .split('\n')
+            .map(line => {
+                line = line.trim();
+                if (!line) return '';
+
+                // Decrease indent after closing brace
+                if (line.endsWith('}')) {
+                    indent = Math.max(0, indent - 4);
+                }
+
+                // Apply current indent
+                const result = ' '.repeat(indent) + line;
+
+                // Increase indent after opening brace
+                if (line.endsWith('{')) {
+                    indent += 4;
+                }
+
+                return result;
+            })
+            .filter(line => line.trim())
+            .join('\n')
+            // Clean up extra newlines
+            .replace(/\n{3,}/g, '\n\n')
+            .trim();
+    }
+
+    function formatGeneric(code) {
+        // Fallback formatter for unknown languages
+        return code
+            .replace(/\s*([{}()[\]=,;:+\-*/%&|^~!<>?])\s*/g, ' $1 ')
+            .replace(/\s+/g, ' ')
+            .replace(/([;{}])\s*/g, '$1\n')
+            .replace(/\n{3,}/g, '\n\n')
+            .trim();
+    }
+
+    // Add event listeners for format buttons
+    const formatLeftBtn = document.getElementById('format-left');
+    const formatRightBtn = document.getElementById('format-right');
+
+    if (formatLeftBtn && leftEditor) {
+        formatLeftBtn.addEventListener('click', () => formatCode(leftEditor));
+    }
+
+    if (formatRightBtn && rightEditor) {
+        formatRightBtn.addEventListener('click', () => formatCode(rightEditor));
+    }
+
+    // Add keyboard shortcut (Alt + F) for formatting
+    document.addEventListener('keydown', (e) => {
+        if (e.altKey && e.key.toLowerCase() === 'f') {
+            e.preventDefault();
+            const activeElement = document.activeElement;
+            if (activeElement === leftEditor) {
+                formatCode(leftEditor);
+            } else if (activeElement === rightEditor) {
+                formatCode(rightEditor);
+            }
+        }
+    });
+
+    // Show toast notification
+    function showToast(message, type = 'info') {
+        const toast = document.createElement('div');
+        toast.className = `toast toast-${type}`;
+        toast.textContent = message;
+
+        const container = document.getElementById('toastContainer');
+        if (container) {
+            container.appendChild(toast);
+
+            // Auto-remove after 3 seconds
+            setTimeout(() => {
+                toast.classList.add('fade-out');
+                setTimeout(() => toast.remove(), 300);
+            }, 3000);
+        }
+    }
+
 
     /* ============================================================
        THEME TOGGLE
@@ -287,7 +515,7 @@ document.addEventListener("DOMContentLoaded", () => {
         // Set default view to show all lines
         diffOutput.classList.remove("show-diff-only");
         diffOutput.classList.add("show-all");
-        
+
         // Update toggle button text
         const toggleBtn = document.getElementById("toggle-context");
         if (toggleBtn) {

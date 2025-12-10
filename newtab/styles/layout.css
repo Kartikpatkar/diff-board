@@ -128,11 +128,53 @@
     flex: 1;
     display: flex;
     flex-direction: column;
-    background: var(--panel-bg);
+    min-width: 0;
     border: 1px solid var(--border-color);
-    border-radius: 12px;
-    box-shadow: 0 10px 30px rgba(0,0,0,0.06);
+    border-radius: 8px;
+    background: var(--surface-color);
     overflow: hidden;
+}
+
+.editor-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 8px 12px;
+    background: var(--surface-color);
+    border-bottom: 1px solid var(--border-color);
+    font-size: 13px;
+    font-weight: 500;
+}
+
+.editor-actions {
+    display: flex;
+    gap: 6px;
+    align-items: center;
+}
+
+.format-btn, .copy-btn {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 28px;
+    height: 28px;
+    padding: 0;
+    border: 1px solid var(--border-color);
+    background: var(--surface-color);
+    border-radius: 6px;
+    cursor: pointer;
+    color: var(--text-secondary);
+    transition: all 0.2s ease;
+}
+
+.format-btn:hover, .copy-btn:hover {
+    background: var(--hover-color);
+    color: var(--text-primary);
+}
+
+.format-btn svg, .copy-btn svg {
+    width: 14px;
+    height: 14px;
 }
 
 .editor-header {
@@ -249,8 +291,93 @@
 
 .diff-header-actions {
     display: flex;
-    gap: 10px;
+    gap: 4px;
     align-items: center;
+    flex-wrap: wrap;
+    justify-content: flex-end;
+}
+
+.diff-header-actions .btn {
+    height: 32px;
+    padding: 0 10px;
+    font-size: 12px;
+    font-weight: 500;
+    border-radius: 6px;
+    transition: all 0.2s ease;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 6px;
+    border: 1px solid var(--border-color);
+    background: var(--surface-color);
+    color: var(--text-secondary);
+}
+
+.diff-header-actions .btn:hover {
+    background: var(--hover-color);
+    color: var(--text-primary);
+}
+
+.diff-header-actions .btn svg {
+    flex-shrink: 0;
+}
+
+.diff-header-actions .btn.btn-icon {
+    padding: 0 10px;
+}
+
+.diff-header-actions .btn.btn-small {
+    height: 28px;
+    padding: 0 8px;
+    font-size: 11px;
+}
+
+.diff-header-actions .btn.btn-success {
+    color: var(--success-color);
+    border-color: rgba(var(--success-rgb), 0.2);
+    background: rgba(var(--success-rgb), 0.08);
+}
+
+.diff-header-actions .btn.btn-success:hover {
+    background: rgba(var(--success-rgb), 0.15);
+}
+
+.diff-header-actions .btn.btn-danger {
+    color: var(--error-color);
+    border-color: rgba(var(--error-rgb), 0.2);
+    background: rgba(var(--error-rgb), 0.08);
+}
+
+.diff-header-actions .btn.btn-danger:hover {
+    background: rgba(var(--error-rgb), 0.15);
+}
+
+.diff-header-actions .divider {
+    width: 1px;
+    height: 16px;
+    background: var(--border-color);
+    margin: 0 2px;
+}
+
+/* Responsive adjustments */
+@media (max-width: 768px) {
+    .diff-header-actions {
+        gap: 3px;
+    }
+    
+    .diff-header-actions .btn span {
+        display: none;
+    }
+    
+    .diff-header-actions .btn {
+        width: 28px;
+        padding: 0;
+        justify-content: center;
+    }
+    
+    .diff-header-actions .divider {
+        margin: 0 1px;
+    }
 }
 
 .diff-header-actions .copy-btn {
