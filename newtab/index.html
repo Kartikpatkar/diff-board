@@ -50,7 +50,6 @@
                 <button class="tab-btn" data-tab="diff-tab" id="diff-tab-btn">Diff</button>
                 <button class="tab-btn" data-tab="merge-tab" id="merge-tab-btn">Merge</button>
             </div>
-            <button id="compare-btn" class="compare-btn">Compare</button>
         </div>
 
         <!-- TAB CONTENT: EDITORS -->
@@ -84,10 +83,7 @@
                 <div class="editor-actions-vertical">
                     <button id="swap-btn" class="btn btn-icon" title="Swap Editors">
                         <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                            <polyline points="16 3 21 3 21 8"></polyline>
-                            <line x1="21" y1="1" x2="11" y2="11"></line>
-                            <polyline points="8 21 3 21 3 16"></polyline>
-                            <line x1="3" y1="23" x2="13" y2="13"></line>
+                            <path d="M7 16V4m0 0L3 8m4-4l4 4m6 0v12m0 0l4-4m-4 4l-4-4"></path>
                         </svg>
                     </button>
                 </div>
@@ -115,6 +111,24 @@
                     </div>
                     <textarea id="right-editor" class="code-editor"
                         placeholder="Paste modified code here..."></textarea>
+                </div>
+            </div>
+
+            <!-- Editor Footer -->
+            <div class="editor-footer">
+                <div class="editor-footer-content">
+                    <div class="editor-footer-info">
+                        <span class="editor-status">Ready to compare</span>
+                        <span class="editor-hint">Click Compare to generate diff</span>
+                    </div>
+                    <button id="compare-btn" class="compare-btn-footer">
+                        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                            <path d="M12 2L2 7l10 5 10-5-10-5z"></path>
+                            <path d="M2 17l10 5 10-5"></path>
+                            <path d="M2 12l10 5 10-5"></path>
+                        </svg>
+                        Compare
+                    </button>
                 </div>
             </div>
 
