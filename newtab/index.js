@@ -64,9 +64,11 @@ document.addEventListener("DOMContentLoaded", () => {
 
     const editorsSection = document.getElementById("editors-tab");
     const diffSection = document.getElementById("diff-tab");
+    const mergeSection = document.getElementById("merge-tab");
 
     const editorsTabButton = document.querySelector('[data-tab="editors-tab"]');
     const diffTabButton = document.querySelector('[data-tab="diff-tab"]');
+    const mergeTabButton = document.querySelector('[data-tab="merge-tab"]');
 
     const tabs = document.querySelectorAll(".tab-btn");
 
@@ -78,20 +80,44 @@ document.addEventListener("DOMContentLoaded", () => {
         tabs.forEach(t => t.classList.remove("active"));
         editorsSection.classList.remove("active");
         diffSection.classList.remove("active");
+        if (mergeSection) mergeSection.classList.remove("active");
 
         if (target === "editors") {
             editorsTabButton.classList.add("active");
             editorsSection.classList.add("active");
-        } else {
+        } else if (target === "diff") {
             diffTabButton.classList.add("active");
             diffSection.classList.add("active");
             diffSection.scrollTop = 0;
+        } else if (target === "merge-tab" && mergeSection && mergeTabButton) {
+            mergeTabButton.classList.add("active");
+            mergeSection.classList.add("active");
+            mergeSection.scrollTop = 0;
         }
     }
 
     safeBind("editors-tab-btn", () => switchTab("editors"));
     safeBind("diff-tab-btn", () => switchTab("diff"));
     safeBind("back-to-editors", () => switchTab("editors"));
+
+    safeBind("toggle-context", () => {
+        const diffOutput = document.getElementById("diff2html-output");
+        const toggleBtn = document.getElementById("toggle-context");
+
+        if (diffOutput.classList.contains("show-all")) {
+            // Switch to show only differences
+            diffOutput.classList.remove("show-all");
+            diffOutput.classList.add("show-diff-only");
+            toggleBtn.textContent = "Show All";
+            showToast("View Changed", "Showing only differences", "info");
+        } else {
+            // Switch to show all lines
+            diffOutput.classList.remove("show-diff-only");
+            diffOutput.classList.add("show-all");
+            toggleBtn.textContent = "Show Diff Only";
+            showToast("View Changed", "Showing all lines", "info");
+        }
+    });
 
     /* ============================================================
        CODE FORMATTING
@@ -503,7 +529,7 @@ document.addEventListener("DOMContentLoaded", () => {
     /* ============================================================
        MANUAL COLLAPSE FEATURE (Disabled by Default)
        -> ALL LINES SHOULD BE VISIBLE
-============================================================ */
+    ============================================================ */
 
     function addCollapseControls() {
         // Do NOT collapse anything by default.
@@ -563,27 +589,148 @@ document.addEventListener("DOMContentLoaded", () => {
         showToast("Comparison Complete", "Diff generated successfully", "success");
     });
 
-
     /* ============================================================
-       TOGGLE CONTEXT LINES (Show All vs Show Only Differences)
-    ============================================================ */
-    safeBind("toggle-context", () => {
-        const toggleBtn = document.getElementById("toggle-context");
-        const isShowingAll = diffOutput.classList.contains("show-all");
+   MERGE FUNCTIONALITY
+============================================================ */
+    function initializeMergeView() {
+        const leftEditor = document.getElementById('left-editor');
+        const rightEditor = document.getElementById('right-editor');
+        const originalContent = document.getElementById('merge-original-content');
+        const resultContent = document.getElementById('merge-result-content');
+        const copyResultBtn = document.getElementById('copy-merge-result');
+        const resetMergeBtn = document.getElementById('reset-merge');
+        const mergeButtons = document.querySelectorAll('.btn-merge');
 
-        if (isShowingAll) {
-            // Switch to show only differences
-            diffOutput.classList.remove("show-all");
-            diffOutput.classList.add("show-diff-only");
-            toggleBtn.textContent = "Show All";
-            showToast("View Changed", "Showing only differences", "info");
-        } else {
-            // Switch to show all lines
-            diffOutput.classList.remove("show-diff-only");
-            diffOutput.classList.add("show-all");
-            toggleBtn.textContent = "Show Diff Only";
-            showToast("View Changed", "Showing all lines", "info");
+        // Check if all required elements exist
+        if (!leftEditor || !rightEditor || !originalContent || !resultContent || !copyResultBtn || !resetMergeBtn) {
+            console.error('Required merge elements not found');
+            return null;
+        }
+
+        // Initialize merge view with the current editor contents
+        function updateMergeView() {
+            try {
+                const leftText = leftEditor.value || '';
+                const rightText = rightEditor.value || '';
+                
+                // Use jsdiff to show differences
+                const diff = Diff.diffLines(leftText, rightText);
+                
+                let html = '';
+                diff.forEach((part) => {
+                    const className = part.added ? 'diff-added' : 
+                                    part.removed ? 'diff-removed' : '';
+                    const content = part.value
+                        .replace(/&/g, '&amp;')
+                        .replace(/</g, '&lt;')
+                        .replace(/>/g, '&gt;')
+                        .replace(/\n/g, '<br>');
+                    
+                    if (part.added || part.removed) {
+                        html += `<div class="diff-line ${className}" data-original="${part.added ? 'right' : 'left'}">${content}</div>`;
+                    } else {
+                        html += `<div class="diff-line">${content}</div>`;
+                    }
+                });
+                
+                originalContent.innerHTML = html;
+                resultContent.textContent = leftText; // Default to left editor content
+                return true;
+            } catch (error) {
+                console.error('Error updating merge view:', error);
+                return false;
+            }
+        }
+
+        // Handle merge button clicks
+        function handleMergeButtonClick(e) {
+            const action = e.currentTarget.dataset.action;
+            const leftText = leftEditor.value || '';
+            const rightText = rightEditor.value || '';
+            
+            if (action === 'left') {
+                resultContent.textContent = leftText;
+                showToast("Applied Left Content", "Using content from the left editor", "success");
+            } else if (action === 'right') {
+                resultContent.textContent = rightText;
+                showToast("Applied Right Content", "Using content from the right editor", "success");
+            }
+        }
+
+        // Set up event listeners
+        function setupEventListeners() {
+            mergeButtons.forEach(button => {
+                button.addEventListener('click', handleMergeButtonClick);
+            });
+
+            // Add event listener for the customize button
+            const customizeBtn = document.getElementById('edit-manual-btn');
+            if (customizeBtn) {
+                customizeBtn.addEventListener('click', () => {
+                    // Focus on the result content for manual editing
+                    resultContent.focus();
+                    // Move cursor to end
+                    const range = document.createRange();
+                    const selection = window.getSelection();
+                    range.selectNodeContents(resultContent);
+                    range.collapse(false);
+                    selection.removeAllRanges();
+                    selection.addRange(range);
+                    showToast("Manual Edit Mode", "You can now customize the merged result", "info");
+                });
+            }
+
+            // Copy result to clipboard
+            copyResultBtn.addEventListener('click', () => {
+                const result = resultContent.textContent;
+                if (navigator.clipboard) {
+                    navigator.clipboard.writeText(result)
+                        .then(() => showToast("Copied!", "Merge result copied to clipboard", "success"))
+                        .catch(() => showToast("Error", "Failed to copy to clipboard", "error"));
+                } else {
+                    // Fallback for browsers that don't support clipboard API
+                    const textarea = document.createElement('textarea');
+                    textarea.value = result;
+                    document.body.appendChild(textarea);
+                    textarea.select();
+                    try {
+                        document.execCommand('copy');
+                        showToast("Copied!", "Merge result copied to clipboard", "success");
+                    } catch (err) {
+                        showToast("Error", "Failed to copy to clipboard", "error");
+                    }
+                    document.body.removeChild(textarea);
+                }
+            });
+
+            // Reset merge
+            resetMergeBtn.addEventListener('click', () => {
+                resultContent.textContent = leftEditor.value || '';
+                showToast("Merge Reset", "Reset to original content", "info");
+            });
+        }
+
+        // Initialize
+        setupEventListeners();
+        updateMergeView();
+
+        return updateMergeView;
+    }
+
+    // Add tab switching for merge tab
+    safeBind("merge-tab-btn", () => {
+        const updateMergeView = initializeMergeView();
+        if (updateMergeView) {
+            updateMergeView();
+            switchTab("merge-tab");
         }
     });
-
+    
+    // Also initialize if we're on the merge tab on page load
+    if (window.location.hash === '#merge') {
+        const updateMergeView = initializeMergeView();
+        if (updateMergeView) {
+            updateMergeView();
+        }
+    }
 });

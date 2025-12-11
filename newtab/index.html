@@ -48,6 +48,7 @@
             <div class="tab-buttons">
                 <button class="tab-btn active" data-tab="editors-tab" id="editors-tab-btn">Editors</button>
                 <button class="tab-btn" data-tab="diff-tab" id="diff-tab-btn">Diff</button>
+                <button class="tab-btn" data-tab="merge-tab" id="merge-tab-btn">Merge</button>
             </div>
             <button id="compare-btn" class="compare-btn">Compare</button>
         </div>
@@ -191,6 +192,64 @@
 
         </div>
 
+        <!-- TAB CONTENT: MERGE -->
+        <div id="merge-tab" class="tab-content">
+            <div class="merge-container">
+                <div class="merge-original">
+                    <div class="merge-header">Original Content</div>
+                    <div id="merge-original-content" class="merge-content"></div>
+                </div>
+                <div class="merge-buttons">
+                    <div class="merge-button-group">
+                        <button class="btn-merge btn-merge-left" data-action="left">
+                            <div class="btn-merge-content">
+                                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                    <path d="M17 21l-7-5 7-5v10z"></path>
+                                    <path d="M3 3h18v18H3z"></path>
+                                    <line x1="12" y1="9" x2="12" y2="15"></line>
+                                </svg>
+                                <span>Use Left</span>
+                            </div>
+                            <div class="btn-merge-hint">Apply original content</div>
+                        </button>
+                        <button class="btn-merge btn-merge-right" data-action="right">
+                            <div class="btn-merge-content">
+                                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                    <path d="M7 21l7-5-7-5v10z"></path>
+                                    <path d="M3 3h18v18H3z"></path>
+                                    <line x1="12" y1="9" x2="12" y2="15"></line>
+                                </svg>
+                                <span>Use Right</span>
+                            </div>
+                            <div class="btn-merge-hint">Apply modified content</div>
+                        </button>
+                    </div>
+                    <div class="merge-separator">
+                        <div class="merge-or-text">OR</div>
+                    </div>
+                    <div class="merge-manual-section">
+                        <div class="merge-manual-hint">Edit manually</div>
+                        <button class="btn-merge-manual" id="edit-manual-btn">
+                            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                <path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"></path>
+                                <path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"></path>
+                            </svg>
+                            Customize
+                        </button>
+                    </div>
+                </div>
+                <div class="merge-result">
+                    <div class="merge-header">Merged Result</div>
+                    <div id="merge-result-content" class="merge-content" contenteditable="true"></div>
+                </div>
+            </div>
+            <div class="merge-actions">
+                <button id="copy-merge-result" class="btn btn-primary">Copy Result</button>
+                <button id="reset-merge" class="btn btn-secondary">Reset</button>
+            </div>
+        </div>
+
+        
     </div>
 
     <!-- Required Libraries -->
