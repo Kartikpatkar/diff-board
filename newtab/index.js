@@ -109,13 +109,11 @@ document.addEventListener("DOMContentLoaded", () => {
             diffOutput.classList.remove("show-all");
             diffOutput.classList.add("show-diff-only");
             toggleBtn.textContent = "Show All";
-            showToast("View Changed", "Showing only differences", "info");
         } else {
             // Switch to show all lines
             diffOutput.classList.remove("show-diff-only");
             diffOutput.classList.add("show-all");
             toggleBtn.textContent = "Show Diff Only";
-            showToast("View Changed", "Showing all lines", "info");
         }
     });
 
