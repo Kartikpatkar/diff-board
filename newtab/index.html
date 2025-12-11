@@ -80,6 +80,17 @@
                     <textarea id="left-editor" class="code-editor" placeholder="Paste original code here..."></textarea>
                 </div>
 
+                <div class="editor-actions-vertical">
+                    <button id="swap-btn" class="btn btn-icon" title="Swap Editors">
+                        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                            <polyline points="16 3 21 3 21 8"></polyline>
+                            <line x1="21" y1="1" x2="11" y2="11"></line>
+                            <polyline points="8 21 3 21 3 16"></polyline>
+                            <line x1="3" y1="23" x2="13" y2="13"></line>
+                        </svg>
+                    </button>
+                </div>
+
                 <div class="editor-panel">
                     <div class="editor-header">
                         <span>Modified Code</span>
@@ -151,6 +162,16 @@
                                 <line x1="5" y1="12" x2="19" y2="12"></line>
                             </svg>
                             <span>Copy –</span>
+                        </button>
+                        <div class="divider"></div>
+                        <button class="btn btn-small btn-icon" id="swap-in-diff" title="Swap Content">
+                            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                <polyline points="16 3 21 3 21 8"></polyline>
+                                <line x1="21" y1="1" x2="11" y2="11"></line>
+                                <polyline points="8 21 3 21 3 16"></polyline>
+                                <line x1="3" y1="23" x2="13" y2="13"></line>
+                            </svg>
+                            <span>Swap</span>
                         </button>
                         <div class="divider"></div>
                         <button class="btn btn-small btn-icon" id="back-to-editors" title="Back to Editors">

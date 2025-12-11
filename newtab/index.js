@@ -281,6 +281,37 @@ document.addEventListener("DOMContentLoaded", () => {
     // Add event listeners for format buttons
     const formatLeftBtn = document.getElementById('format-left');
     const formatRightBtn = document.getElementById('format-right');
+    
+    // Function to swap editor contents
+    function swapEditorContents() {
+        const leftEditor = document.getElementById('left-editor');
+        const rightEditor = document.getElementById('right-editor');
+        
+        if (leftEditor && rightEditor) {
+            const temp = leftEditor.value;
+            leftEditor.value = rightEditor.value;
+            rightEditor.value = temp;
+            
+            // Trigger input events to update any listeners
+            leftEditor.dispatchEvent(new Event('input', { bubbles: true }));
+            rightEditor.dispatchEvent(new Event('input', { bubbles: true }));
+            
+            showToast("Editors swapped", "The content has been swapped between editors", "success");
+            return true;
+        }
+        return false;
+    }
+
+    // Add event listener for editor swap button
+    safeBind("swap-btn", swapEditorContents);
+    
+    // Add event listener for diff view swap button
+    safeBind("swap-in-diff", () => {
+        if (swapEditorContents()) {
+            // If swap was successful, re-run the comparison
+            document.getElementById('compare-btn').click();
+        }
+    });
 
     if (formatLeftBtn && leftEditor) {
         formatLeftBtn.addEventListener('click', () => formatCode(leftEditor));
