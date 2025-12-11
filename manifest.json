@@ -4,8 +4,8 @@
     "description": "A developer-friendly code comparison tool.",
     "version": "1.0.0",
 
-    "permissions": ["storage", "contextMenus"],
-    "host_permissions": ["<all_urls>"],
+    "permissions": ["storage"],
+    "host_permissions": [],
 
     "background": {
         "service_worker": "background/service-worker.js"
