@@ -402,6 +402,44 @@ document.addEventListener("DOMContentLoaded", () => {
     }
 
     /* ============================================================
+       JSON MODE TOGGLE
+    ============================================================ */
+    safeBind("json-toggle", () => {
+        const leftEditor = document.getElementById('left-editor');
+        const rightEditor = document.getElementById('right-editor');
+        const jsonBtn = document.getElementById('json-toggle');
+        
+        if (leftEditor && rightEditor && jsonBtn) {
+            // Toggle JSON mode visual state
+            if (jsonBtn.textContent === 'JSON Mode') {
+                jsonBtn.textContent = 'Exit JSON';
+                jsonBtn.classList.add('btn-primary');
+                jsonBtn.classList.remove('btn-secondary');
+                
+                // Try to format both editors as JSON
+                try {
+                    if (leftEditor.value.trim()) {
+                        const parsed = JSON.parse(leftEditor.value);
+                        leftEditor.value = JSON.stringify(parsed, null, 2);
+                    }
+                    if (rightEditor.value.trim()) {
+                        const parsed = JSON.parse(rightEditor.value);
+                        rightEditor.value = JSON.stringify(parsed, null, 2);
+                    }
+                    showToast('JSON Mode', 'Editors formatted as JSON', 'success');
+                } catch (err) {
+                    showToast('JSON Error', 'Invalid JSON format', 'error');
+                }
+            } else {
+                jsonBtn.textContent = 'JSON Mode';
+                jsonBtn.classList.remove('btn-primary');
+                jsonBtn.classList.add('btn-secondary');
+                showToast('JSON Mode', 'Exited JSON mode', 'info');
+            }
+        }
+    });
+
+    /* ============================================================
        CLEAR BUTTON
     ============================================================ */
     safeBind("clear-btn", () => {
