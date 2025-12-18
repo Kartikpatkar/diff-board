@@ -92,7 +92,7 @@ If you have questions, concerns, or feedback regarding this privacy policy, feel
 
 * **👨‍💻 Author:** Kartik Patkar
 * **📧 Email:** [kartikkp.assets@gmail.com](mailto:kartikkp.assets@gmail.com)
-* **🐙 GitHub:** [https://github.com/Kartikpatkar/diffboard](https://github.com/Kartikpatkar/diffboard)
+* **🐙 GitHub:** [https://github.com/Kartikpatkar/diff-board](https://github.com/Kartikpatkar/diff-board)
 * **💼 LinkedIn:** [https://www.linkedin.com/in/kartik-patkar](https://www.linkedin.com/in/kartik-patkar)
 
 ---
