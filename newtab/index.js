@@ -64,11 +64,9 @@ document.addEventListener("DOMContentLoaded", () => {
 
     const editorsSection = document.getElementById("editors-tab");
     const diffSection = document.getElementById("diff-tab");
-    const mergeSection = document.getElementById("merge-tab");
 
     const editorsTabButton = document.querySelector('[data-tab="editors-tab"]');
     const diffTabButton = document.querySelector('[data-tab="diff-tab"]');
-    const mergeTabButton = document.querySelector('[data-tab="merge-tab"]');
 
     const tabs = document.querySelectorAll(".tab-btn");
 
@@ -80,7 +78,6 @@ document.addEventListener("DOMContentLoaded", () => {
         tabs.forEach(t => t.classList.remove("active"));
         editorsSection.classList.remove("active");
         diffSection.classList.remove("active");
-        if (mergeSection) mergeSection.classList.remove("active");
 
         if (target === "editors") {
             editorsTabButton.classList.add("active");
@@ -89,10 +86,6 @@ document.addEventListener("DOMContentLoaded", () => {
             diffTabButton.classList.add("active");
             diffSection.classList.add("active");
             diffSection.scrollTop = 0;
-        } else if (target === "merge-tab" && mergeSection && mergeTabButton) {
-            mergeTabButton.classList.add("active");
-            mergeSection.classList.add("active");
-            mergeSection.scrollTop = 0;
         }
     }
 
@@ -328,6 +321,7 @@ document.addEventListener("DOMContentLoaded", () => {
 
     // Add event listener for editor swap button
     safeBind("swap-btn", swapEditorContents);
+    safeBind("swap-editors-btn", swapEditorContents);
     
     // Add event listener for diff view swap button
     safeBind("swap-in-diff", () => {
@@ -358,51 +352,33 @@ document.addEventListener("DOMContentLoaded", () => {
         }
     });
 
-    // Show toast notification
-    function showToast(message, type = 'info') {
-        const toast = document.createElement('div');
-        toast.className = `toast toast-${type}`;
-        toast.textContent = message;
-
-        const container = document.getElementById('toastContainer');
-        if (container) {
-            container.appendChild(toast);
-
-            // Auto-remove after 3 seconds
-            setTimeout(() => {
-                toast.classList.add('fade-out');
-                setTimeout(() => toast.remove(), 300);
-            }, 3000);
-        }
-    }
-
-
     /* ============================================================
        THEME TOGGLE
     ============================================================ */
-    chrome.storage.sync.get(["theme"], ({ theme }) => {
-        if (theme === "dark") document.body.classList.add("dark-theme");
-    });
+    const themeToggle = document.getElementById('theme-toggle');
+    const body = document.body;
 
-    safeBind("theme-toggle", () => {
-        const dark = document.body.classList.toggle("dark-theme");
+    // Load saved theme preference or default to light theme
+    const savedTheme = localStorage.getItem('theme') || 'light-theme';
+    body.className = savedTheme;
+    if (themeToggle) {
+        themeToggle.checked = savedTheme === 'dark-theme';
+    }
 
-        chrome.storage.sync.set({ theme: dark ? "dark" : "light" });
-
-        showToast("Theme Updated", dark ? "Dark Mode Enabled" : "Light Mode Enabled", "info");
-    });
-
-
-    /* ============================================================
-       JSON MODE FORMATTER
-    ============================================================ */
-    safeBind("json-toggle", () => {
-        try { leftEditor.value = JSON.stringify(JSON.parse(leftEditor.value), null, 2); } catch { }
-        try { rightEditor.value = JSON.stringify(JSON.parse(rightEditor.value), null, 2); } catch { }
-
-        showToast("JSON Mode", "Editors formatted as JSON", "info");
-    });
-
+    // Theme toggle event listener
+    if (themeToggle) {
+        themeToggle.addEventListener('change', () => {
+            if (themeToggle.checked) {
+                body.className = 'dark-theme';
+                localStorage.setItem('theme', 'dark-theme');
+                // showToast('Dark Mode', 'Theme changed to dark mode', 'success');
+            } else {
+                body.className = 'light-theme';
+                localStorage.setItem('theme', 'light-theme');
+                // showToast('Light Mode', 'Theme changed to light mode', 'success');
+            }
+        });
+    }
 
     /* ============================================================
        CLEAR BUTTON
@@ -586,149 +562,4 @@ document.addEventListener("DOMContentLoaded", () => {
 
         showToast("Comparison Complete", "Diff generated successfully", "success");
     });
-
-    /* ============================================================
-   MERGE FUNCTIONALITY
-============================================================ */
-    function initializeMergeView() {
-        const leftEditor = document.getElementById('left-editor');
-        const rightEditor = document.getElementById('right-editor');
-        const originalContent = document.getElementById('merge-original-content');
-        const resultContent = document.getElementById('merge-result-content');
-        const copyResultBtn = document.getElementById('copy-merge-result');
-        const resetMergeBtn = document.getElementById('reset-merge');
-        const mergeButtons = document.querySelectorAll('.btn-merge');
-
-        // Check if all required elements exist
-        if (!leftEditor || !rightEditor || !originalContent || !resultContent || !copyResultBtn || !resetMergeBtn) {
-            console.error('Required merge elements not found');
-            return null;
-        }
-
-        // Initialize merge view with the current editor contents
-        function updateMergeView() {
-            try {
-                const leftText = leftEditor.value || '';
-                const rightText = rightEditor.value || '';
-                
-                // Use jsdiff to show differences
-                const diff = Diff.diffLines(leftText, rightText);
-                
-                let html = '';
-                diff.forEach((part) => {
-                    const className = part.added ? 'diff-added' : 
-                                    part.removed ? 'diff-removed' : '';
-                    const content = part.value
-                        .replace(/&/g, '&amp;')
-                        .replace(/</g, '&lt;')
-                        .replace(/>/g, '&gt;')
-                        .replace(/\n/g, '<br>');
-                    
-                    if (part.added || part.removed) {
-                        html += `<div class="diff-line ${className}" data-original="${part.added ? 'right' : 'left'}">${content}</div>`;
-                    } else {
-                        html += `<div class="diff-line">${content}</div>`;
-                    }
-                });
-                
-                originalContent.innerHTML = html;
-                resultContent.textContent = leftText; // Default to left editor content
-                return true;
-            } catch (error) {
-                console.error('Error updating merge view:', error);
-                return false;
-            }
-        }
-
-        // Handle merge button clicks
-        function handleMergeButtonClick(e) {
-            const action = e.currentTarget.dataset.action;
-            const leftText = leftEditor.value || '';
-            const rightText = rightEditor.value || '';
-            
-            if (action === 'left') {
-                resultContent.textContent = leftText;
-                showToast("Applied Left Content", "Using content from the left editor", "success");
-            } else if (action === 'right') {
-                resultContent.textContent = rightText;
-                showToast("Applied Right Content", "Using content from the right editor", "success");
-            }
-        }
-
-        // Set up event listeners
-        function setupEventListeners() {
-            mergeButtons.forEach(button => {
-                button.addEventListener('click', handleMergeButtonClick);
-            });
-
-            // Add event listener for the customize button
-            const customizeBtn = document.getElementById('edit-manual-btn');
-            if (customizeBtn) {
-                customizeBtn.addEventListener('click', () => {
-                    // Focus on the result content for manual editing
-                    resultContent.focus();
-                    // Move cursor to end
-                    const range = document.createRange();
-                    const selection = window.getSelection();
-                    range.selectNodeContents(resultContent);
-                    range.collapse(false);
-                    selection.removeAllRanges();
-                    selection.addRange(range);
-                    showToast("Manual Edit Mode", "You can now customize the merged result", "info");
-                });
-            }
-
-            // Copy result to clipboard
-            copyResultBtn.addEventListener('click', () => {
-                const result = resultContent.textContent;
-                if (navigator.clipboard) {
-                    navigator.clipboard.writeText(result)
-                        .then(() => showToast("Copied!", "Merge result copied to clipboard", "success"))
-                        .catch(() => showToast("Error", "Failed to copy to clipboard", "error"));
-                } else {
-                    // Fallback for browsers that don't support clipboard API
-                    const textarea = document.createElement('textarea');
-                    textarea.value = result;
-                    document.body.appendChild(textarea);
-                    textarea.select();
-                    try {
-                        document.execCommand('copy');
-                        showToast("Copied!", "Merge result copied to clipboard", "success");
-                    } catch (err) {
-                        showToast("Error", "Failed to copy to clipboard", "error");
-                    }
-                    document.body.removeChild(textarea);
-                }
-            });
-
-            // Reset merge
-            resetMergeBtn.addEventListener('click', () => {
-                resultContent.textContent = leftEditor.value || '';
-                showToast("Merge Reset", "Reset to original content", "info");
-            });
-        }
-
-        // Initialize
-        setupEventListeners();
-        updateMergeView();
-
-        return updateMergeView;
-    }
-
-    // Add tab switching for merge tab
-    safeBind("merge-tab-btn", () => {
-        const updateMergeView = initializeMergeView();
-        if (updateMergeView) {
-            updateMergeView();
-            switchTab("merge-tab");
-        }
-    });
-    
-    // Also initialize if we're on the merge tab on page load
-    if (window.location.hash === '#merge') {
-        const updateMergeView = initializeMergeView();
-        if (updateMergeView) {
-            updateMergeView();
-        }
-    }
 });

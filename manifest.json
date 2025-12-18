@@ -25,9 +25,9 @@
     }],
 
     "icons": {
-        "16": "assets/icons/logo.png",
-        "32": "assets/icons/logo.png",
-        "48": "assets/icons/logo.png",
-        "128": "assets/icons/logo.png"
+        "16": "newtab/assets/icons/logo.png",
+        "32": "newtab/assets/icons/logo.png",
+        "48": "newtab/assets/icons/logo.png",
+        "128": "newtab/assets/icons/logo.png"
     }
 }
