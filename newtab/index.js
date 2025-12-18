@@ -353,6 +353,27 @@ document.addEventListener("DOMContentLoaded", () => {
     });
 
     /* ============================================================
+       FOOTER INITIALIZATION
+    ============================================================ */
+    // Set current year
+    const currentYearEl = document.getElementById('currentYear');
+    if (currentYearEl) {
+        currentYearEl.textContent = new Date().getFullYear();
+    }
+
+    // Populate footer with constants (if constants module is available)
+    // Since constants is a module, we'll use static values for now
+    const footerTitle = document.getElementById('footerTitle');
+    const tagline = document.getElementById('tagline');
+    const authorDisplay = document.getElementById('authorDisplay');
+    const copyright = document.getElementById('copyright');
+
+    if (footerTitle) footerTitle.textContent = 'DiffBoard';
+    if (tagline) tagline.textContent = 'Your Ultimate Diff Tool for Code Comparison';
+    if (authorDisplay) authorDisplay.textContent = 'Kartik Patkar';
+    if (copyright) copyright.textContent = 'DiffBoard. All rights reserved.';
+
+    /* ============================================================
        THEME TOGGLE
     ============================================================ */
     const themeToggle = document.getElementById('theme-toggle');

@@ -1,0 +1,107 @@
+/* -------------------------------
+   Footer Styles
+------------------------------- */
+.footer {
+    background: #f8fafc; /* light theme background */
+    color: #334155;      /* primary text color */
+    padding: 15px 20px;
+    text-align: center;
+    font-family: 'Inter', sans-serif;
+    transition: all 0.3s ease;
+}
+
+.footer a {
+    color: inherit;
+    text-decoration: none;
+    transition: all 0.3s ease;
+}
+
+.footer a:hover {
+    color: #6366f1; /* highlight color */
+}
+
+.footer-logo {
+    font-size: 1.5rem;
+    font-weight: 700;
+    margin-bottom: 10px;
+    color: #6366f1;
+}
+
+.footer-text {
+    font-size: 0.95rem;
+    margin-bottom: 15px;
+    color: #64748b;
+}
+
+.footer-info-row {
+    margin-bottom: 15px;
+    font-size: 0.9rem;
+    color: #475569;
+}
+
+.footer-info-row i {
+    margin-right: 5px;
+}
+
+.footer-links {
+    display: flex;
+    justify-content: center;
+    flex-wrap: wrap;
+    gap: 15px;
+    margin-bottom: 20px;
+}
+
+.footer-link i {
+    margin-right: 5px;
+}
+
+.footer-divider {
+    height: 1px;
+    background: #e2e8f0;
+    margin: 15px 0;
+}
+
+.footer-copyright {
+    font-size: 0.85rem;
+    color: #94a3b8;
+}
+
+/* Responsive adjustments */
+@media (max-width: 480px) {
+    .footer-links {
+        flex-direction: column;
+        gap: 10px;
+    }
+}
+
+/* -------------------------------
+   Dark Theme
+------------------------------- */
+body.dark-theme .footer {
+    background: #1e1e1e;
+    color: #e0e0e0;
+}
+
+body.dark-theme .footer-text {
+    color: #aaa;
+}
+
+body.dark-theme .footer-info-row {
+    color: #ccc;
+}
+
+body.dark-theme .footer-divider {
+    background: #444;
+}
+
+body.dark-theme .footer-copyright {
+    color: #888;
+}
+
+body.dark-theme .footer a:hover {
+    color: #8b5cf6; /* highlight color in dark mode */
+}
+
+body.dark-theme .footer-logo {
+    color: #8b5cf6;
+}

@@ -19,6 +19,10 @@
     <link rel="stylesheet" href="styles/theme.css" />
     <link rel="stylesheet" href="styles/diff.css" />
     <link rel="stylesheet" href="styles/toasts.css">
+    <link rel="stylesheet" href="styles/footer.css">
+
+    <!-- Font Awesome for icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
 
     <!-- Diff2Html Styles -->
     <link rel="stylesheet" href="libs/diff2html/diff2html.min.css" />
@@ -184,9 +188,49 @@
 
         </div>
 
-                
-        
-        
+        <!-- Footer starts here -->
+        <footer class="footer">
+            <div class="footer-content">
+
+                <!-- Website name or logo -->
+                <div class="footer-logo" id="footerTitle">DiffBoard</div>
+
+                <!-- Short description or tagline -->
+                <p class="footer-text" id="tagline">Your Ultimate Diff Tool for Code Comparison</p>
+
+                <!-- Author name and credit -->
+                <div class="footer-info-row">
+                    <div class="footer-author">
+                        <i class="fas fa-code"></i> Created with ❤️ by <span id="authorDisplay">Kartik Patkar</span>
+                    </div>
+                </div>
+
+                <!-- Social media and contact links -->
+                <div class="footer-links">
+                    <a href="https://github.com/Kartikpatkar/diff-board" class="footer-link github" target="_blank">
+                        <i class="fab fa-github"></i> GitHub
+                    </a>
+                    <a href="https://www.linkedin.com/in/kartik-patkar" class="footer-link linkedin" target="_blank">
+                        <i class="fab fa-linkedin"></i> LinkedIn
+                    </a>
+                    <a href="https://www.salesforce.com/trailblazer/kpatkar1" class="footer-link trailhead" target="_blank">
+                        <i class="fab fa-salesforce"></i> Trailhead
+                    </a>
+                    <a href="mailto:kartikkp.assets@gmail.com" class="footer-link email">
+                        <i class="fas fa-envelope"></i> Email
+                    </a>
+                </div>
+
+                <!-- Horizontal divider line -->
+                <div class="footer-divider"></div>
+
+                <!-- Copyright text -->
+                <div class="footer-copyright">
+                    &copy; <span id="currentYear"></span> <span id="copyright">DiffBoard</span>
+                </div>
+            </div>
+        </footer>
+
     </div>
 
     <!-- Required Libraries -->
@@ -195,6 +239,9 @@
 
     <!-- Toast Utility -->
     <script src="../utils/toast.js"></script>
+
+    <!-- Constants -->
+    <script type="module" src="utils/constants.js"></script>
 
     <!-- App Logic -->
     <script src="index.js"></script>
