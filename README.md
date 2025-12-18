@@ -92,11 +92,14 @@ DiffBoard is designed with:
 
 ## 📸 Screenshots
 
-> *(Add screenshots here once finalized)*
+### 🔷 Light Mode
 
-* Light Mode – Input + Diff View
-* Dark Mode – Full Diff View
-* JSON Mode Comparison
+![Light Mode - Editor Page](./newtab/assets/screenshot/Editor%20Page-light.png)
+![Light Mode - Diff View](./newtab/assets/screenshot/Diff%20View-light.png)
+
+### 🌑 Dark Mode
+
+![Dark Mode - Editor Page](./newtab/assets/screenshot/Editor%20Page-dark.png)
 
 ---
 
