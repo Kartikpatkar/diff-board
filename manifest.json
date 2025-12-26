@@ -4,7 +4,7 @@
     "description": "A developer-friendly code comparison tool.",
     "version": "1.0.0",
 
-    "permissions": ["storage"],
+    "permissions": [],
     "host_permissions": [],
 
     "background": {
