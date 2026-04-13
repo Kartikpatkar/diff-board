@@ -94,12 +94,12 @@ DiffBoard is designed with:
 
 ### 🔷 Light Mode
 
-![Light Mode - Editor Page](./newtab/assets/screenshot/Editor%20Page-light.png)
-![Light Mode - Diff View](./newtab/assets/screenshot/Diff%20Page-light.png)
+![Light Mode - Editor Page](./assets/screenshot/Editor%20Page-light.png)
+![Light Mode - Diff View](./assets/screenshot/Diff%20Page-light.png)
 
 ### 🌑 Dark Mode
 
-![Dark Mode - Editor Page](./newtab/assets/screenshot/Editor%20Page-dark.png)
+![Dark Mode - Editor Page](./assets/screenshot/Editor%20Page-dark.png)
 
 ---
 

@@ -1,5 +1,5 @@
-import { ensureDiffLibrariesLoaded } from "./modules/library-loader.js";
-import { initApp } from "./modules/app-init.js";
+import { ensureDiffLibrariesLoaded } from "../modules/library-loader.js";
+import { initApp } from "../modules/app-init.js";
 
 document.addEventListener("DOMContentLoaded", async () => {
     try {

@@ -17,17 +17,17 @@
 
     "web_accessible_resources": [{
         "resources": [
-            "newtab/libs/jsdiff/jsdiff.min.js",
-            "newtab/libs/diff2html/diff2html.min.js",
-            "newtab/libs/diff2html/diff2html.min.css"
+            "libs/jsdiff/jsdiff.min.js",
+            "libs/diff2html/diff2html.min.js",
+            "libs/diff2html/diff2html.min.css"
         ],
         "matches": ["<all_urls>"]
     }],
 
     "icons": {
-        "16": "newtab/assets/icons/logo.png",
-        "32": "newtab/assets/icons/logo.png",
-        "48": "newtab/assets/icons/logo.png",
-        "128": "newtab/assets/icons/logo.png"
+        "16": "assets/icons/logo.png",
+        "32": "assets/icons/logo.png",
+        "48": "assets/icons/logo.png",
+        "128": "assets/icons/logo.png"
     }
 }
