@@ -1,3 +1,7 @@
+import { safeBind, getActiveEditor } from "./modules/dom-helpers.js";
+import { applyFormatAction } from "./modules/format-tools.js";
+import { registerKeyboardShortcuts } from "./modules/keyboard-shortcuts.js";
+
 /* ============================================================
    DiffBoard - Main Script (FINAL BUILD)
    Includes:
@@ -10,15 +14,6 @@
    - JSON formatting
    - Dark mode
 ============================================================ */
-
-/* --------------------------
-   Safe Event Binding Helper
---------------------------- */
-function safeBind(id, handler) {
-    const el = document.getElementById(id);
-    if (el) el.addEventListener("click", handler);
-}
-
 
 /* ============================================================
    WAIT UNTIL LIBRARIES ARE LOADED (jsdiff + Diff2Html)
@@ -110,194 +105,33 @@ document.addEventListener("DOMContentLoaded", () => {
         }
     });
 
-    /* ============================================================
-       CODE FORMATTING
-    ============================================================ */
-    function formatCode(textarea) {
-        const code = textarea.value.trim();
-        if (!code) return;
+    const formatActionSelect = document.getElementById("format-action");
 
-        // Try to detect language based on content
-        const language = detectLanguage(code);
+    function runFormatAction(targetEditor) {
+        if (!targetEditor) return;
+        const action = formatActionSelect?.value || "format";
+        const result = applyFormatAction(targetEditor.value, action);
 
-        try {
-            switch (language) {
-                case 'json':
-                    const parsed = JSON.parse(code);
-                    textarea.value = JSON.stringify(parsed, null, 2);
-                    showToast('JSON formatted successfully!', 'success');
-                    break;
+        if (result.success && typeof result.output === "string") {
+            targetEditor.value = result.output;
+        }
 
-                case 'javascript':
-                    textarea.value = formatJavaScript(code);
-                    showToast('JavaScript formatted!', 'success');
-                    break;
-
-                case 'html':
-                    textarea.value = formatHTML(code);
-                    showToast('HTML formatted!', 'success');
-                    break;
-
-                case 'css':
-                    textarea.value = formatCSS(code);
-                    showToast('CSS formatted!', 'success');
-                    break;
-
-                default:
-                    // Try generic formatting
-                    textarea.value = formatGeneric(code);
-                    showToast('Code formatted!', 'info');
-            }
-        } catch (err) {
-            console.error('Formatting error:', err);
-            showToast('Could not format code. Unsupported format or syntax error.', 'error');
+        if (typeof window.showToast === "function") {
+            window.showToast(result.title, result.message, result.type);
         }
     }
 
-    function detectLanguage(code) {
-        // Check for JSON
-        try {
-            JSON.parse(code);
-            return 'json';
-        } catch (e) {
-            // Not JSON, continue detection
+    function runFormatActionForSelection() {
+        const activeEditor = getActiveEditor(leftEditor, rightEditor);
+        if (activeEditor) {
+            runFormatAction(activeEditor);
+            return;
         }
 
-        // Check for HTML
-        if (/<[a-z][\s\S]*>/i.test(code)) {
-            return 'html';
-        }
-
-        // Check for CSS
-        if (/\{[^{}]*\}/.test(code) && /[a-zA-Z-]+\s*:/.test(code)) {
-            return 'css';
-        }
-
-        // Default to JavaScript for code with common JS patterns
-        if (/(function|const|let|var|=>|import|export|class)\s+/.test(code)) {
-            return 'javascript';
-        }
-
-        return 'unknown';
+        // If focus is outside editors, apply on both editors
+        runFormatAction(leftEditor);
+        runFormatAction(rightEditor);
     }
-
-    function formatJavaScript(code) {
-        // Enhanced JavaScript formatting
-        return code
-            // Normalize whitespace
-            .replace(/\s*([{}()[\]=,;:+\-*/%&|^~!<>?])\s*/g, ' $1 ')
-            .replace(/\s+/g, ' ')
-            .trim()
-            // Add newlines
-            .replace(/([;{}])\s*/g, '$1\n')
-            .replace(/([^\{\}])\{/g, '$1 {')
-            .replace(/\}\s*/g, '}\n')
-            // Handle indentation
-            .split('\n')
-            .map((line, i, arr) => {
-                line = line.trim();
-                // Handle indentation
-                const indent = line.match(/^(\s*)/)[0].length;
-                if (line.endsWith('{') || line.endsWith('[')) {
-                    return '    '.repeat(indent) + line;
-                }
-                if (line.endsWith('}') || line.endsWith(']')) {
-                    return '    '.repeat(Math.max(0, indent - 4)) + line;
-                }
-                return '    '.repeat(indent) + line;
-            })
-            .join('\n')
-            // Clean up
-            .replace(/\n{3,}/g, '\n\n')
-            .trim();
-    }
-
-    function formatHTML(code) {
-        // Basic HTML formatting
-        let indent = 0;
-        return code
-            .replace(/</g, '\n<')
-            .replace(/>/g, '>\n')
-            .split('\n')
-            .map(line => {
-                line = line.trim();
-                if (!line) return '';
-
-                if (line.startsWith('</')) {
-                    indent = Math.max(0, indent - 4);
-                }
-
-                const result = ' '.repeat(indent) + line;
-
-                if (line.startsWith('<') && !line.startsWith('</') && !line.endsWith('/>')) {
-                    indent += 4;
-                }
-
-                return result;
-            })
-            .filter(line => line.trim())
-            .join('\n');
-    }
-
-    function formatCSS(code) {
-        // Remove all existing whitespace
-        let formatted = code.replace(/\s+/g, ' ').trim();
-
-        // Add newlines and proper indentation
-        let indent = 0;
-        let inRule = false;
-        let inMedia = false;
-
-        return formatted
-            // Handle @ rules
-            .replace(/(@[^{]+\{)/g, '\n$1\n')
-            // Handle closing braces
-            .replace(/\}/g, '\n}\n')
-            // Handle opening braces
-            .replace(/\{/g, ' {\n')
-            // Handle semicolons
-            .replace(/;/g, ';\n')
-            // Split into lines
-            .split('\n')
-            .map(line => {
-                line = line.trim();
-                if (!line) return '';
-
-                // Decrease indent after closing brace
-                if (line.endsWith('}')) {
-                    indent = Math.max(0, indent - 4);
-                }
-
-                // Apply current indent
-                const result = ' '.repeat(indent) + line;
-
-                // Increase indent after opening brace
-                if (line.endsWith('{')) {
-                    indent += 4;
-                }
-
-                return result;
-            })
-            .filter(line => line.trim())
-            .join('\n')
-            // Clean up extra newlines
-            .replace(/\n{3,}/g, '\n\n')
-            .trim();
-    }
-
-    function formatGeneric(code) {
-        // Fallback formatter for unknown languages
-        return code
-            .replace(/\s*([{}()[\]=,;:+\-*/%&|^~!<>?])\s*/g, ' $1 ')
-            .replace(/\s+/g, ' ')
-            .replace(/([;{}])\s*/g, '$1\n')
-            .replace(/\n{3,}/g, '\n\n')
-            .trim();
-    }
-
-    // Add event listeners for format buttons
-    const formatLeftBtn = document.getElementById('format-left');
-    const formatRightBtn = document.getElementById('format-right');
     
     // Function to swap editor contents
     function swapEditorContents() {
@@ -331,26 +165,7 @@ document.addEventListener("DOMContentLoaded", () => {
         }
     });
 
-    if (formatLeftBtn && leftEditor) {
-        formatLeftBtn.addEventListener('click', () => formatCode(leftEditor));
-    }
-
-    if (formatRightBtn && rightEditor) {
-        formatRightBtn.addEventListener('click', () => formatCode(rightEditor));
-    }
-
-    // Add keyboard shortcut (Alt + F) for formatting
-    document.addEventListener('keydown', (e) => {
-        if (e.altKey && e.key.toLowerCase() === 'f') {
-            e.preventDefault();
-            const activeElement = document.activeElement;
-            if (activeElement === leftEditor) {
-                formatCode(leftEditor);
-            } else if (activeElement === rightEditor) {
-                formatCode(rightEditor);
-            }
-        }
-    });
+    safeBind("json-toggle", runFormatActionForSelection);
 
     /* ============================================================
        FOOTER INITIALIZATION
@@ -402,44 +217,6 @@ document.addEventListener("DOMContentLoaded", () => {
     }
 
     /* ============================================================
-       JSON MODE TOGGLE
-    ============================================================ */
-    safeBind("json-toggle", () => {
-        const leftEditor = document.getElementById('left-editor');
-        const rightEditor = document.getElementById('right-editor');
-        const jsonBtn = document.getElementById('json-toggle');
-        
-        if (leftEditor && rightEditor && jsonBtn) {
-            // Toggle JSON mode visual state
-            if (jsonBtn.textContent === 'JSON Mode') {
-                jsonBtn.textContent = 'Exit JSON';
-                jsonBtn.classList.add('btn-primary');
-                jsonBtn.classList.remove('btn-secondary');
-                
-                // Try to format both editors as JSON
-                try {
-                    if (leftEditor.value.trim()) {
-                        const parsed = JSON.parse(leftEditor.value);
-                        leftEditor.value = JSON.stringify(parsed, null, 2);
-                    }
-                    if (rightEditor.value.trim()) {
-                        const parsed = JSON.parse(rightEditor.value);
-                        rightEditor.value = JSON.stringify(parsed, null, 2);
-                    }
-                    showToast('JSON Mode', 'Editors formatted as JSON', 'success');
-                } catch (err) {
-                    showToast('JSON Error', 'Invalid JSON format', 'error');
-                }
-            } else {
-                jsonBtn.textContent = 'JSON Mode';
-                jsonBtn.classList.remove('btn-primary');
-                jsonBtn.classList.add('btn-secondary');
-                showToast('JSON Mode', 'Exited JSON mode', 'info');
-            }
-        }
-    });
-
-    /* ============================================================
        CLEAR BUTTON
     ============================================================ */
     safeBind("clear-btn", () => {
@@ -450,6 +227,17 @@ document.addEventListener("DOMContentLoaded", () => {
         switchTab("editors");
 
         showToast("Cleared", "Editors & diff reset", "info");
+    });
+
+    registerKeyboardShortcuts({
+        leftEditor,
+        rightEditor,
+        getActiveEditor,
+        onCompare: () => document.getElementById("compare-btn")?.click(),
+        onClear: () => document.getElementById("clear-btn")?.click(),
+        onApplyFormat: runFormatAction,
+        onSwitchToEditors: () => switchTab("editors"),
+        onSwitchToDiff: () => switchTab("diff")
     });
 
 

@@ -530,6 +530,29 @@
     align-items: center;
 }
 
+.format-tools-group {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+}
+
+.format-action-select {
+    height: 38px;
+    min-width: 150px;
+    border-radius: 10px;
+    border: 1px solid var(--border-color);
+    background: var(--surface-color);
+    color: var(--text-color);
+    padding: 0 12px;
+    font-weight: 600;
+    outline: none;
+}
+
+.format-action-select:focus {
+    border-color: #2563eb;
+    box-shadow: 0 0 0 2px rgba(37, 99, 235, 0.2);
+}
+
 /* Modern Swap Button Design */
 .btn-swap {
     border: none;

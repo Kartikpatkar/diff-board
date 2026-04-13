@@ -62,7 +62,7 @@
             <div class="editors-container">
                 <div class="editor-panel">
                     <div class="editor-header">
-                        <span></span>Original Code</span>
+                        <span>Original Code</span>
                         <div class="editor-actions">
                             <button class="btn-copy" id="copy-left" title="Copy to Clipboard">
                                 <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
@@ -103,7 +103,15 @@
                     </div>
                     <div class="editor-footer-actions">
                         <button class="btn btn-secondary" id="clear-btn">Clear</button>
-                        <button class="btn btn-secondary" id="json-toggle">JSON Mode</button>
+                        <div class="format-tools-group">
+                            <select id="format-action" class="format-action-select" title="Format action">
+                                <option value="format">Format</option>
+                                <option value="minify">Minify</option>
+                                <option value="validate">Validate</option>
+                                <option value="sort-keys">Sort Keys (JSON)</option>
+                            </select>
+                            <button class="btn btn-secondary" id="json-toggle" title="Apply selected format action (Ctrl/Cmd + J)">Apply</button>
+                        </div>
                         <button id="swap-editors-btn" class="btn-swap" title="Swap editors">
                             <div class="btn-swap-content">
                                 <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
@@ -244,7 +252,7 @@
     <script type="module" src="utils/constants.js"></script>
 
     <!-- App Logic -->
-    <script src="index.js"></script>
+    <script type="module" src="index.js"></script>
 
 </body>
 
