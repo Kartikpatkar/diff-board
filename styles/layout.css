@@ -16,6 +16,25 @@
 }
 
 /* Branding */
+.branding {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+.branding-text {
+    display: flex;
+    flex-direction: column;
+}
+
+.toolbar-logo {
+    width: 30px;
+    height: 30px;
+    object-fit: contain;
+    border-radius: 6px;
+    flex-shrink: 0;
+}
+
 .app-title {
     font-size: 20px;
     font-weight: 700;
