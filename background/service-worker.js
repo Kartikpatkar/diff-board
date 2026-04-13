@@ -1,5 +1,5 @@
 chrome.action.onClicked.addListener(() => {
     chrome.tabs.create({
-        url: chrome.runtime.getURL("newtab/index.html")
+        url: chrome.runtime.getURL("app/index.html")
     });
 });
