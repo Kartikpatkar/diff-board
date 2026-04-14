@@ -10,6 +10,66 @@ function copyText(text, onSuccess, onError) {
     onError?.();
 }
 
+const SUPPORTED_FILE_EXTENSIONS = new Set([
+    ".json",
+    ".txt",
+    ".js",
+    ".ts",
+    ".jsx",
+    ".tsx",
+    ".html",
+    ".htm",
+    ".css",
+    ".scss",
+    ".sass",
+    ".less",
+    ".xml",
+    ".yaml",
+    ".yml",
+    ".md",
+    ".csv",
+    ".sql",
+    ".py",
+    ".java",
+    ".c",
+    ".cc",
+    ".cpp",
+    ".h",
+    ".hpp",
+    ".cs",
+    ".php",
+    ".rb",
+    ".go",
+    ".rs",
+    ".sh",
+    ".bat",
+    ".ps1",
+    ".ini",
+    ".conf",
+    ".log",
+    ".cls"
+]);
+
+function getExtension(fileName) {
+    const lastDot = fileName.lastIndexOf(".");
+    if (lastDot === -1) return "";
+    return fileName.slice(lastDot).toLowerCase();
+}
+
+function isSupportedTextFile(file) {
+    if (!file) return false;
+    return SUPPORTED_FILE_EXTENSIONS.has(getExtension(file.name));
+}
+
+function readFileAsText(file) {
+    return new Promise((resolve, reject) => {
+        const reader = new FileReader();
+        reader.onload = () => resolve(typeof reader.result === "string" ? reader.result : "");
+        reader.onerror = () => reject(new Error(`Unable to read ${file.name}`));
+        reader.readAsText(file);
+    });
+}
+
 export function initEditorActions({ leftEditor, rightEditor, diffOutput, safeBind, showToast, onAfterSwap }) {
     function swapEditorContents() {
         if (!leftEditor || !rightEditor) return false;
@@ -80,4 +140,58 @@ export function initEditorActions({ leftEditor, rightEditor, diffOutput, safeBin
             () => showToast?.("Copy Failed", "Unable to copy removed lines", "error")
         );
     });
+
+    function bindFileDrop(editor, label) {
+        const panel = editor?.closest(".editor-panel");
+        if (!editor || !panel) return;
+
+        const setDragState = (isActive) => {
+            panel.classList.toggle("is-dragover", isActive);
+        };
+
+        panel.addEventListener("dragenter", (event) => {
+            event.preventDefault();
+            setDragState(true);
+        });
+
+        panel.addEventListener("dragover", (event) => {
+            event.preventDefault();
+            event.dataTransfer.dropEffect = "copy";
+            setDragState(true);
+        });
+
+        panel.addEventListener("dragleave", (event) => {
+            if (!panel.contains(event.relatedTarget)) {
+                setDragState(false);
+            }
+        });
+
+        panel.addEventListener("drop", async (event) => {
+            event.preventDefault();
+            setDragState(false);
+
+            const [file] = event.dataTransfer?.files || [];
+            if (!file) return;
+
+            if (!isSupportedTextFile(file)) {
+                showToast?.(
+                    "Unsupported File",
+                    "Supported types: .json, .txt, .js, .xml, .log, .cls",
+                    "error"
+                );
+                return;
+            }
+
+            try {
+                editor.value = await readFileAsText(file);
+                editor.dispatchEvent(new Event("input", { bubbles: true }));
+                showToast?.("File Loaded", `${file.name} loaded into ${label}`, "success");
+            } catch (error) {
+                showToast?.("Read Failed", error.message || `Unable to read ${file.name}`, "error");
+            }
+        });
+    }
+
+    bindFileDrop(leftEditor, "Original Code");
+    bindFileDrop(rightEditor, "Modified Code");
 }

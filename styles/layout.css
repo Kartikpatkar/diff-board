@@ -201,6 +201,17 @@
     overflow: hidden;
 }
 
+.editor-panel.is-dragover {
+    border-color: #2563eb;
+    box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.18);
+    transform: translateY(-1px);
+    transition: border-color 0.15s ease, box-shadow 0.15s ease, transform 0.15s ease;
+}
+
+.editor-panel.is-dragover .editor-header {
+    background: rgba(37, 99, 235, 0.08);
+}
+
 .code-editor {
     flex: 1;
     min-height: 0;
