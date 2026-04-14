@@ -1,7 +1,7 @@
 # 🔀 DiffBoard – Code Comparison Tool
 
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
-[![Version](https://img.shields.io/badge/Version-1.1.0-blue.svg)](#)
+[![Version](https://img.shields.io/badge/Version-1.1.1-blue.svg)](#)
 [![Chrome Extension](https://img.shields.io/badge/Chrome-Extension-green.svg?logo=google-chrome)](#)
 
 > **Tagline**: *Compare code, text, and JSON like a developer — fast, visual, and distraction-free.*

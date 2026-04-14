@@ -9,6 +9,15 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 - _No unreleased changes._
 
+## [1.1.1] - 2026-04-14
+
+### Added
+- **Toolbar branding icon** - Added the application icon to the top toolbar before the DiffBoard title for stronger product branding.
+
+### Fixed
+- **Manifest icon mappings** - Updated Chrome extension icon mappings to use resolution-specific assets for `16`, `32`, `48`, and `128` sizes.
+- **Missing 128px icon asset** - Restored the required `128x128` icon file and aligned the toolbar/action icon setup with the generated asset set.
+
 ## [1.1.0] - 2026-04-13
 
 ### Added
@@ -61,10 +70,12 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## Version History Summary
 
+- **1.1.1** (Apr 2026) - Toolbar branding polish and finalized extension icon asset mappings.
 - **1.1.0** (Apr 2026) - Major refactor: modular architecture, generic format tools, keyboard shortcuts, SVG sprite icons, and full project structure cleanup.
 - **1.0.1** - Previous pre-refactor release before the architecture and folder-layout overhaul.
 
 ---
 
-[Unreleased]: https://github.com/Kartikpatkar/diff-board/compare/v1.1.0...HEAD
+[Unreleased]: https://github.com/Kartikpatkar/diff-board/compare/v1.1.1...HEAD
+[1.1.1]: https://github.com/Kartikpatkar/diff-board/compare/v1.1.0...v1.1.1
 [1.1.0]: https://github.com/Kartikpatkar/diff-board/compare/v1.0.1...v1.1.0
