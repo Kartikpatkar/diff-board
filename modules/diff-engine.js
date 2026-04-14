@@ -80,6 +80,8 @@ function waitForNextPaint() {
     });
 }
 
+const COMPARE_DEBOUNCE_MS = 180;
+
 export function initDiffEngine({ leftEditor, rightEditor, diffOutput, safeBind, showToast }) {
     const editorsSection = document.getElementById("editors-tab");
     const diffSection = document.getElementById("diff-tab");
@@ -88,6 +90,8 @@ export function initDiffEngine({ leftEditor, rightEditor, diffOutput, safeBind, 
     const compareButton = document.getElementById("compare-btn");
     const compareLoading = document.getElementById("compare-loading");
     const tabs = document.querySelectorAll(".tab-btn");
+    let compareDebounceTimer = null;
+    let compareInFlight = false;
 
     function switchTab(target) {
         tabs.forEach((t) => t.classList.remove("active"));
@@ -140,7 +144,9 @@ export function initDiffEngine({ leftEditor, rightEditor, diffOutput, safeBind, 
         }
     }
 
-    async function compareNow() {
+    async function runComparison() {
+        if (compareInFlight) return;
+
         const leftText = leftEditor.value.trim();
         const rightText = rightEditor.value.trim();
 
@@ -149,6 +155,7 @@ export function initDiffEngine({ leftEditor, rightEditor, diffOutput, safeBind, 
             return;
         }
 
+        compareInFlight = true;
         switchTab("diff");
         setCompareLoading(true);
         await waitForNextPaint();
@@ -186,8 +193,22 @@ export function initDiffEngine({ leftEditor, rightEditor, diffOutput, safeBind, 
             diffOutput.innerHTML = "";
             showToast?.("Comparison Failed", error?.message || "Unable to render diff", "error");
         } finally {
+            compareInFlight = false;
             setCompareLoading(false);
         }
+    }
+
+    function compareNow() {
+        if (compareInFlight) return;
+
+        if (compareDebounceTimer) {
+            clearTimeout(compareDebounceTimer);
+        }
+
+        compareDebounceTimer = setTimeout(() => {
+            compareDebounceTimer = null;
+            runComparison();
+        }, COMPARE_DEBOUNCE_MS);
     }
 
     safeBind("editors-tab-btn", () => switchTab("editors"));
