@@ -1,7 +1,7 @@
 # 🔀 DiffBoard – Code Comparison Tool
 
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
-[![Version](https://img.shields.io/badge/Version-1.1.1-blue.svg)](#)
+[![Version](https://img.shields.io/badge/Version-1.1.2-blue.svg)](#)
 [![Chrome Extension](https://img.shields.io/badge/Chrome-Extension-green.svg?logo=google-chrome)](#)
 
 > **Tagline**: *Compare code, text, and JSON like a developer — fast, visual, and distraction-free.*
@@ -10,7 +10,7 @@
 
 ## ✨ Overview
 
-**DiffBoard** is a modern, developer-friendly **Chrome Extension** that opens in a new tab and helps you **compare code, text, and JSON** with a clean UI and powerful diff visualization.
+**DiffBoard** is a modern, developer-friendly **Chrome Extension** that opens from the extension toolbar and helps you **compare code, text, JSON, logs, and config files** with a clean UI and powerful diff visualization.
 
 Built for developers who frequently compare:
 
@@ -28,7 +28,7 @@ DiffBoard focuses on **clarity, speed, and usability**, without overwhelming you
 
 ### 🔍 Side-by-Side Code Comparison
 
-* Paste **Original** and **Modified** content
+* Paste or drop files into the **Original** and **Modified** editors
 * Visual, GitHub-style diff output
 * Clear highlights for:
 
@@ -53,23 +53,53 @@ DiffBoard focuses on **clarity, speed, and usability**, without overwhelming you
 * Copy **only added** or **only removed** lines
 * Toast notifications confirm every action
 
-### 🧩 JSON Mode
+### 🧩 Format Tools
 
-* One-click JSON formatter
-* Pretty-prints both inputs
-* Ideal for API payload comparison
+* Reusable format actions for `Format`, `Minify`, `Validate`, and `Sort Keys (JSON)`
+* Works with common text and code inputs, not just JSON payloads
+* Ideal for API payloads, config files, and source snippets
+
+### 📁 File Import
+
+* Drag and drop files directly onto either editor
+* Supports common text, code, markup, config, and log file types
+* Helpful for quick comparisons without manual copy and paste
+
+### 🗂️ Supported File Types
+
+* Text and logs: `.txt`, `.log`, `.md`, `.csv`
+* Web and markup: `.html`, `.htm`, `.css`, `.scss`, `.sass`, `.less`, `.xml`
+* JSON and config: `.json`, `.yaml`, `.yml`, `.ini`, `.conf`
+* JavaScript and TypeScript: `.js`, `.ts`, `.jsx`, `.tsx`
+* Common backend and scripting files: `.py`, `.java`, `.cs`, `.php`, `.rb`, `.go`, `.rs`, `.sh`, `.bat`, `.ps1`
+* C-family and headers: `.c`, `.cc`, `.cpp`, `.h`, `.hpp`, `.cls`
+
+### ⌨️ Keyboard Shortcuts
+
+* `Ctrl/Cmd + Enter` → Compare
+* `Ctrl/Cmd + L` → Clear
+* `Ctrl/Cmd + Shift + C` → Copy diff
+* `Ctrl/Cmd + D` → Toggle theme
+* `Ctrl/Cmd + J` → Apply selected format tool
+* `Ctrl/Cmd + 1 / 2` → Switch between Editors and Diff tabs
+* Built-in shortcuts help modal available from the toolbar
+
+### 🪄 Better Large-File UX
+
+* `Comparing...` loading state during heavy diff rendering
+* Debounced compare flow to avoid repeated renders from rapid clicks
+* Wrap toggles in both Editors and Diff views for long-line handling
 
 ### 🌓 Dark / Light Theme
 
 * Clean light theme for readability
 * Developer-friendly dark mode
-* Theme preference persisted using Chrome Storage
+* Theme preference persisted locally across sessions
 
 ### 🧭 Tab-Based Workflow
 
 * Input View – paste and edit content
 * Diff View – focus on comparison results
-* (Planned) Compare View – advanced VS-Code-style diff with merge controls
 
 ### 🧼 Clear & Reset
 
@@ -87,6 +117,7 @@ DiffBoard is designed with:
 * **Keyboard-friendly layout**
 * **Scrollable, non-clipping diff output**
 * **No forced fullscreen** — users stay in control
+* **Long-line resilience** with optional wrapping and loading feedback
 
 ---
 
@@ -139,7 +170,7 @@ DiffBoard is designed with:
 
 5. **Done 🎉**
 
-   * Open a new tab or click the extension icon to launch DiffBoard
+   * Click the extension icon in Chrome to launch DiffBoard
 
 > ✅ Works completely offline
 > ✅ No login or external services required
@@ -148,27 +179,24 @@ DiffBoard is designed with:
 
 ## 🧪 Current Capabilities
 
-✔ Text comparison
-✔ Code comparison
-✔ JSON formatting
-✔ Diff statistics
-✔ Copy utilities
+✔ Text, code, JSON, and config comparison
+✔ Drag-and-drop file import
+✔ Broad support for common web, config, script, and source file types
+✔ Reusable format tools
+✔ Diff statistics and copy utilities
+✔ Keyboard shortcuts and in-app shortcut help
 ✔ Dark / light themes
-✔ Chrome new-tab integration
+✔ Wrap toggles for editors and diff output
+✔ Loading feedback for large comparisons
 
 ---
 
 ## 🛣️ Roadmap (Planned Enhancements)
 
 * 🧠 **VS Code–style Compare View**
-
-  * Editable side-by-side editors
-  * Inline merge arrows
-  * Real-time diff updates
-* 📁 File import (local files)
 * 🔗 Shareable diff export
-* ⌨️ Keyboard shortcuts
 * 📌 Save comparison history
+* 💾 Remember recent comparisons
 
 ---
 

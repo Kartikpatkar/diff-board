@@ -9,6 +9,23 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 - _No unreleased changes._
 
+## [1.1.2] - 2026-04-14
+
+### Added
+- **Drag-and-drop file import** - Added direct file drop support for the left and right editors, including common code, text, markup, config, and log file formats.
+- **Shortcuts help modal** - Added a toolbar shortcuts button that opens an in-app keyboard shortcuts reference for discoverability.
+- **Wrap controls** - Added Wrap toggles in both the editor footer and diff header so long lines can be wrapped on demand.
+
+### Changed
+- **Keyboard shortcut set** - Expanded the shortcut mappings to include compare, clear, copy diff, theme toggle, format apply, and tab switching.
+- **Formatting workflow messaging** - Kept drag-and-drop validation and unsupported-file messaging in sync with the shared supported extension list.
+
+### Fixed
+- **Large diff feedback** - Added a visible `Comparing...` loading indicator before heavy diff rendering begins.
+- **Repeated compare triggers** - Debounced compare requests and blocked overlapping renders from rapid repeated clicks or shortcuts.
+- **Long-line overflow** - Enabled optional wrapping for editor content and rendered diff output to prevent horizontal overflow.
+- **Loading overlay visibility** - Fixed the compare overlay so it hides correctly after rendering completes.
+
 ## [1.1.1] - 2026-04-14
 
 ### Added
@@ -70,12 +87,14 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## Version History Summary
 
+- **1.1.2** (Apr 2026) - File drag-and-drop, expanded shortcuts, wrap controls, loading feedback, and debounced compare rendering.
 - **1.1.1** (Apr 2026) - Toolbar branding polish and finalized extension icon asset mappings.
 - **1.1.0** (Apr 2026) - Major refactor: modular architecture, generic format tools, keyboard shortcuts, SVG sprite icons, and full project structure cleanup.
 - **1.0.1** - Previous pre-refactor release before the architecture and folder-layout overhaul.
 
 ---
 
-[Unreleased]: https://github.com/Kartikpatkar/diff-board/compare/v1.1.1...HEAD
+[Unreleased]: https://github.com/Kartikpatkar/diff-board/compare/v1.1.2...HEAD
+[1.1.2]: https://github.com/Kartikpatkar/diff-board/compare/v1.1.1...v1.1.2
 [1.1.1]: https://github.com/Kartikpatkar/diff-board/compare/v1.1.0...v1.1.1
 [1.1.0]: https://github.com/Kartikpatkar/diff-board/compare/v1.0.1...v1.1.0
