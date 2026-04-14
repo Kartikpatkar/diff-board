@@ -74,11 +74,19 @@ function addCollapseControls() {
     // Intentionally left as placeholder.
 }
 
+function waitForNextPaint() {
+    return new Promise((resolve) => {
+        requestAnimationFrame(() => requestAnimationFrame(resolve));
+    });
+}
+
 export function initDiffEngine({ leftEditor, rightEditor, diffOutput, safeBind, showToast }) {
     const editorsSection = document.getElementById("editors-tab");
     const diffSection = document.getElementById("diff-tab");
     const editorsTabButton = document.querySelector('[data-tab="editors-tab"]');
     const diffTabButton = document.querySelector('[data-tab="diff-tab"]');
+    const compareButton = document.getElementById("compare-btn");
+    const compareLoading = document.getElementById("compare-loading");
     const tabs = document.querySelectorAll(".tab-btn");
 
     function switchTab(target) {
@@ -110,7 +118,29 @@ export function initDiffEngine({ leftEditor, rightEditor, diffOutput, safeBind, 
         }
     }
 
-    function compareNow() {
+    function setCompareLoading(isLoading) {
+        diffOutput.classList.toggle("is-loading", isLoading);
+
+        if (compareLoading) {
+            compareLoading.hidden = !isLoading;
+            compareLoading.setAttribute("aria-hidden", String(!isLoading));
+        }
+
+        if (compareButton) {
+            compareButton.disabled = isLoading;
+            compareButton.setAttribute("aria-busy", String(isLoading));
+            compareButton.innerHTML = isLoading
+                ? "<span>Comparing...</span>"
+                : `
+                    <svg width="16" height="16" viewBox="0 0 24 24" aria-hidden="true">
+                        <use href="../assets/icons/sprite.svg#icon-compare"></use>
+                    </svg>
+                    Compare
+                `;
+        }
+    }
+
+    async function compareNow() {
         const leftText = leftEditor.value.trim();
         const rightText = rightEditor.value.trim();
 
@@ -119,35 +149,45 @@ export function initDiffEngine({ leftEditor, rightEditor, diffOutput, safeBind, 
             return;
         }
 
-        const { text: patch, stats } = createUnifiedDiff(leftText, rightText);
-
-        const html = window.Diff2Html.html(patch, {
-            drawFileList: false,
-            matching: "lines",
-            outputFormat: "side-by-side",
-            diffStyle: "word",
-            highlight: true,
-            context: Number.MAX_SAFE_INTEGER
-        });
-
-        diffOutput.innerHTML = html;
-        updateSummary(stats);
-        markDiffRows(diffOutput);
-
-        diffOutput.classList.remove("show-diff-only");
-        diffOutput.classList.add("show-all");
-
-        const toggleBtn = document.getElementById("toggle-context");
-        setToggleContextLabel(toggleBtn, "Show Diff Only");
-
-        addCollapseControls();
-
-        if (diffTabButton) {
-            diffTabButton.disabled = false;
-        }
-
         switchTab("diff");
-        showToast?.("Comparison Complete", "Diff generated successfully", "success");
+        setCompareLoading(true);
+        await waitForNextPaint();
+
+        try {
+            const { text: patch, stats } = createUnifiedDiff(leftText, rightText);
+
+            const html = window.Diff2Html.html(patch, {
+                drawFileList: false,
+                matching: "lines",
+                outputFormat: "side-by-side",
+                diffStyle: "word",
+                highlight: true,
+                context: Number.MAX_SAFE_INTEGER
+            });
+
+            diffOutput.innerHTML = html;
+            updateSummary(stats);
+            markDiffRows(diffOutput);
+
+            diffOutput.classList.remove("show-diff-only");
+            diffOutput.classList.add("show-all");
+
+            const toggleBtn = document.getElementById("toggle-context");
+            setToggleContextLabel(toggleBtn, "Show Diff Only");
+
+            addCollapseControls();
+
+            if (diffTabButton) {
+                diffTabButton.disabled = false;
+            }
+
+            showToast?.("Comparison Complete", "Diff generated successfully", "success");
+        } catch (error) {
+            diffOutput.innerHTML = "";
+            showToast?.("Comparison Failed", error?.message || "Unable to render diff", "error");
+        } finally {
+            setCompareLoading(false);
+        }
     }
 
     safeBind("editors-tab-btn", () => switchTab("editors"));
