@@ -15,19 +15,102 @@ export function initUi({ showToast }) {
     if (copyright) copyright.textContent = "DiffBoard. All rights reserved.";
 
     const themeToggle = document.getElementById("theme-toggle");
+    const wrapToggle = document.getElementById("wrap-toggle");
+    const diffWrapToggle = document.getElementById("wrap-toggle-diff");
+    const shortcutsButton = document.getElementById("shortcuts-btn");
+    const shortcutsModal = document.getElementById("shortcuts-modal");
+    const shortcutsBackdrop = document.getElementById("shortcuts-backdrop");
+    const shortcutsClose = document.getElementById("shortcuts-close");
     const body = document.body;
 
-    const savedTheme = localStorage.getItem("theme") || "light-theme";
-    body.classList.remove("light-theme", "dark-theme");
-    body.classList.add(savedTheme);
+    function setTheme(theme) {
+        body.classList.remove("light-theme", "dark-theme");
+        body.classList.add(theme);
+        localStorage.setItem("theme", theme);
 
-    if (themeToggle) {
-        themeToggle.checked = savedTheme === "dark-theme";
-        themeToggle.addEventListener("change", () => {
-            const theme = themeToggle.checked ? "dark-theme" : "light-theme";
-            body.classList.remove("light-theme", "dark-theme");
-            body.classList.add(theme);
-            localStorage.setItem("theme", theme);
+        if (themeToggle) {
+            themeToggle.checked = theme === "dark-theme";
+        }
+    }
+
+    function toggleTheme() {
+        const nextTheme = body.classList.contains("dark-theme") ? "light-theme" : "dark-theme";
+        setTheme(nextTheme);
+        showToast?.("Theme Updated", `Switched to ${nextTheme === "dark-theme" ? "dark" : "light"} mode`, "info");
+    }
+
+    function setWrapEnabled(isWrapped) {
+        body.classList.toggle("wrap-lines", isWrapped);
+        localStorage.setItem("wrap-lines", String(isWrapped));
+
+        [wrapToggle, diffWrapToggle].forEach((button) => {
+            button?.setAttribute("aria-pressed", String(isWrapped));
+            button?.classList.toggle("is-active", isWrapped);
         });
     }
+
+    function toggleWrap() {
+        const nextValue = !body.classList.contains("wrap-lines");
+        setWrapEnabled(nextValue);
+        showToast?.("Wrap Updated", nextValue ? "Long lines now wrap" : "Long lines stay on one line", "info");
+    }
+
+    function setShortcutsModalOpen(isOpen) {
+        if (!shortcutsModal || !shortcutsBackdrop) return;
+
+        shortcutsModal.hidden = !isOpen;
+        shortcutsBackdrop.hidden = !isOpen;
+        shortcutsButton?.setAttribute("aria-expanded", String(isOpen));
+
+        if (isOpen) {
+            shortcutsClose?.focus();
+            return;
+        }
+
+        shortcutsButton?.focus();
+    }
+
+    const savedTheme = localStorage.getItem("theme") || "light-theme";
+    const savedWrapPreference = localStorage.getItem("wrap-lines") === "true";
+    setTheme(savedTheme);
+    setWrapEnabled(savedWrapPreference);
+
+    if (themeToggle) {
+        themeToggle.addEventListener("change", () => {
+            setTheme(themeToggle.checked ? "dark-theme" : "light-theme");
+        });
+    }
+
+    wrapToggle?.addEventListener("click", () => {
+        toggleWrap();
+    });
+
+    diffWrapToggle?.addEventListener("click", () => {
+        toggleWrap();
+    });
+
+    shortcutsButton?.addEventListener("click", () => {
+        setShortcutsModalOpen(shortcutsModal?.hidden !== false);
+    });
+
+    shortcutsClose?.addEventListener("click", () => {
+        setShortcutsModalOpen(false);
+    });
+
+    shortcutsBackdrop?.addEventListener("click", () => {
+        setShortcutsModalOpen(false);
+    });
+
+    document.addEventListener("keydown", (event) => {
+        if (event.key === "Escape" && shortcutsModal?.hidden === false) {
+            setShortcutsModalOpen(false);
+        }
+    });
+
+    return {
+        toggleTheme,
+        toggleWrap,
+        openShortcutsModal: () => setShortcutsModalOpen(true),
+        closeShortcutsModal: () => setShortcutsModalOpen(false)
+    };
 }

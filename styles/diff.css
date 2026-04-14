@@ -2,6 +2,50 @@
    DIFF2HTML — GLOBAL FIXES
 ============================================================ */
 
+.diff-output {
+    position: relative;
+}
+
+.compare-loading {
+    position: absolute;
+    inset: 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 12px;
+    background: color-mix(in srgb, var(--surface-color) 86%, transparent);
+    color: var(--text-color);
+    font-weight: 600;
+    z-index: 5;
+}
+
+.compare-loading[hidden] {
+    display: none !important;
+}
+
+.compare-loading-spinner {
+    width: 18px;
+    height: 18px;
+    border: 2px solid rgba(37, 99, 235, 0.2);
+    border-top-color: #2563eb;
+    border-radius: 999px;
+    animation: compare-spin 0.75s linear infinite;
+}
+
+#diff2html-output.is-loading {
+    visibility: hidden;
+}
+
+@keyframes compare-spin {
+    from {
+        transform: rotate(0deg);
+    }
+
+    to {
+        transform: rotate(360deg);
+    }
+}
+
 /* Ensure full expansion */
 #diff2html-output,
 #diff2html-output .d2h-wrapper {
@@ -36,6 +80,13 @@
 #diff2html-output .d2h-code-side-line {
     overflow: visible !important;
     padding: 0 1.5em;
+}
+
+body.wrap-lines #diff2html-output .d2h-code-line-ctn,
+body.wrap-lines #diff2html-output .d2h-code-side-line-ctn {
+    white-space: pre-wrap !important;
+    overflow-wrap: anywhere;
+    word-break: break-word;
 }
 
 /* ============================================================

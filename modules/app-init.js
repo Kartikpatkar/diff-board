@@ -16,7 +16,7 @@ export function initApp() {
         }
     };
 
-    initUi({ showToast });
+    const ui = initUi({ showToast });
 
     const diffEngine = initDiffEngine({
         leftEditor,
@@ -77,6 +77,8 @@ export function initApp() {
         getActiveEditor,
         onCompare: () => diffEngine.compareNow(),
         onClear: () => document.getElementById("clear-btn")?.click(),
+        onCopyDiff: () => document.getElementById("copy-diff")?.click(),
+        onToggleTheme: () => ui?.toggleTheme?.(),
         onApplyFormat: runFormatAction,
         onSwitchToEditors: () => diffEngine.switchTab("editors"),
         onSwitchToDiff: () => diffEngine.switchTab("diff")

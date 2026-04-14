@@ -15,6 +15,130 @@
     backdrop-filter: blur(8px);
 }
 
+.toolbar-controls {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+}
+
+.toolbar-btn {
+    appearance: none;
+    border: 1px solid var(--border-color);
+    background: var(--surface-color);
+    color: var(--text-color);
+    border-radius: 999px;
+    padding: 8px 14px;
+    font-size: 12px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: background 0.2s ease, border-color 0.2s ease, transform 0.2s ease;
+}
+
+.toolbar-btn:hover {
+    background: var(--hover-color);
+    border-color: #2563eb;
+    transform: translateY(-1px);
+}
+
+.toolbar-btn:focus-visible {
+    outline: 2px solid #2563eb;
+    outline-offset: 2px;
+}
+
+.modal-backdrop {
+    position: fixed;
+    inset: 0;
+    background: rgba(15, 23, 42, 0.42);
+    z-index: 40;
+}
+
+.shortcuts-modal {
+    position: fixed;
+    top: 78px;
+    right: 18px;
+    width: min(420px, calc(100vw - 24px));
+    border: 1px solid var(--border-color);
+    border-radius: 16px;
+    background: var(--surface-color);
+    box-shadow: 0 24px 48px rgba(15, 23, 42, 0.2);
+    padding: 18px;
+    z-index: 50;
+}
+
+.shortcuts-modal-header {
+    display: flex;
+    align-items: flex-start;
+    justify-content: space-between;
+    gap: 12px;
+    margin-bottom: 14px;
+}
+
+.shortcuts-modal-header h2 {
+    margin: 0;
+    font-size: 18px;
+}
+
+.shortcuts-modal-header p {
+    margin: 4px 0 0;
+    font-size: 13px;
+    color: var(--muted-color);
+}
+
+.shortcuts-list {
+    display: grid;
+    gap: 10px;
+}
+
+.shortcut-item {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 12px;
+    padding: 10px 12px;
+    border-radius: 12px;
+    background: rgba(37, 99, 235, 0.05);
+}
+
+.shortcut-item span {
+    font-size: 13px;
+    color: var(--text-color);
+}
+
+.shortcut-item kbd {
+    padding: 6px 10px;
+    border-radius: 10px;
+    border: 1px solid var(--border-color);
+    background: var(--surface-color);
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 12px;
+    white-space: nowrap;
+}
+
+@media (max-width: 720px) {
+    .toolbar {
+        gap: 12px;
+        align-items: flex-start;
+        flex-direction: column;
+    }
+
+    .toolbar-controls {
+        width: 100%;
+        justify-content: space-between;
+    }
+
+    .shortcuts-modal {
+        top: 110px;
+        right: 12px;
+        left: 12px;
+        width: auto;
+    }
+
+    .shortcut-item {
+        flex-direction: column;
+        align-items: flex-start;
+    }
+}
+
 /* Branding */
 .branding {
     display: flex;
@@ -201,6 +325,17 @@
     overflow: hidden;
 }
 
+.editor-panel.is-dragover {
+    border-color: #2563eb;
+    box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.18);
+    transform: translateY(-1px);
+    transition: border-color 0.15s ease, box-shadow 0.15s ease, transform 0.15s ease;
+}
+
+.editor-panel.is-dragover .editor-header {
+    background: rgba(37, 99, 235, 0.08);
+}
+
 .code-editor {
     flex: 1;
     min-height: 0;
@@ -215,6 +350,12 @@
     outline: none;
     white-space: pre;
     overflow: auto;
+}
+
+body.wrap-lines .code-editor {
+    white-space: pre-wrap;
+    overflow-wrap: anywhere;
+    word-break: break-word;
 }
 
 .editor-header {
@@ -327,6 +468,12 @@
     color: var(--text-color);
 }
 
+.btn-secondary.is-active {
+    background: rgba(37, 99, 235, 0.12);
+    border-color: #2563eb;
+    color: #2563eb;
+}
+
 .btn-small {
     padding: 6px 10px;
     color: var(--text-color);
@@ -405,6 +552,12 @@
 .diff-header-actions .btn:hover {
     background: var(--hover-color);
     color: var(--text-primary);
+}
+
+.diff-header-actions .btn.is-active {
+    background: rgba(37, 99, 235, 0.12);
+    border-color: #2563eb;
+    color: #2563eb;
 }
 
 .diff-header-actions .btn svg {
