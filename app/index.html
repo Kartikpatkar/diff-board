@@ -44,12 +44,58 @@
             </div>
 
             <div class="toolbar-controls">
+                <button class="toolbar-btn shortcuts-trigger" id="shortcuts-btn" type="button" aria-haspopup="dialog" aria-expanded="false" aria-controls="shortcuts-modal">
+                    Shortcuts
+                </button>
                 <label class="theme-toggle">
                     <input type="checkbox" id="theme-toggle">
                     <span class="slider"></span>
                 </label>
             </div>
         </header>
+
+        <div class="modal-backdrop" id="shortcuts-backdrop" hidden></div>
+        <section class="shortcuts-modal" id="shortcuts-modal" role="dialog" aria-modal="true" aria-labelledby="shortcuts-title" hidden>
+            <div class="shortcuts-modal-header">
+                <div>
+                    <h2 id="shortcuts-title">Keyboard shortcuts</h2>
+                    <p>Use these shortcuts anywhere in DiffBoard.</p>
+                </div>
+                <button class="toolbar-btn shortcuts-close" id="shortcuts-close" type="button" aria-label="Close shortcuts help">
+                    Close
+                </button>
+            </div>
+            <div class="shortcuts-list" aria-label="Supported keyboard shortcuts">
+                <div class="shortcut-item">
+                    <span>Compare</span>
+                    <kbd>Ctrl/Cmd + Enter</kbd>
+                </div>
+                <div class="shortcut-item">
+                    <span>Clear editors and diff</span>
+                    <kbd>Ctrl/Cmd + L</kbd>
+                </div>
+                <div class="shortcut-item">
+                    <span>Copy full diff</span>
+                    <kbd>Ctrl/Cmd + Shift + C</kbd>
+                </div>
+                <div class="shortcut-item">
+                    <span>Toggle theme</span>
+                    <kbd>Ctrl/Cmd + D</kbd>
+                </div>
+                <div class="shortcut-item">
+                    <span>Apply selected format tool</span>
+                    <kbd>Ctrl/Cmd + J</kbd>
+                </div>
+                <div class="shortcut-item">
+                    <span>Switch to Editors tab</span>
+                    <kbd>Ctrl/Cmd + 1</kbd>
+                </div>
+                <div class="shortcut-item">
+                    <span>Switch to Diff tab</span>
+                    <kbd>Ctrl/Cmd + 2</kbd>
+                </div>
+            </div>
+        </section>
 
         <!-- TABS -->
         <div class="tabs">

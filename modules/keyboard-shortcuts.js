@@ -4,6 +4,8 @@ export function registerKeyboardShortcuts({
     getActiveEditor,
     onCompare,
     onClear,
+    onCopyDiff,
+    onToggleTheme,
     onApplyFormat,
     onSwitchToEditors,
     onSwitchToDiff
@@ -19,10 +21,24 @@ export function registerKeyboardShortcuts({
             return;
         }
 
-        // Clear: Ctrl/Cmd + Shift + L
-        if (e.shiftKey && e.key.toLowerCase() === "l") {
+        // Clear: Ctrl/Cmd + L
+        if (!e.shiftKey && e.key.toLowerCase() === "l") {
             e.preventDefault();
             onClear?.();
+            return;
+        }
+
+        // Copy diff: Ctrl/Cmd + Shift + C
+        if (e.shiftKey && e.key.toLowerCase() === "c") {
+            e.preventDefault();
+            onCopyDiff?.();
+            return;
+        }
+
+        // Toggle theme: Ctrl/Cmd + D
+        if (!e.shiftKey && e.key.toLowerCase() === "d") {
+            e.preventDefault();
+            onToggleTheme?.();
             return;
         }
 
