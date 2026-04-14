@@ -20,7 +20,7 @@ body.dark-theme {
     --bg-color: #0f0f23;
     --text-color: #e5e7eb;
     --text-secondary: #94a3b8;
-    --surface-color: rgba(25,25,40,0.8);
+    --surface-color: rgba(25,25,40);
     --border-color: rgba(255,255,255,0.12);
     --panel-bg: rgba(35,40,60,0.7);
     --hover-color: rgba(255, 255, 255, 0.1);

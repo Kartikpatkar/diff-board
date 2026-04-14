@@ -89,6 +89,17 @@ body.wrap-lines #diff2html-output .d2h-code-side-line-ctn {
     word-break: break-word;
 }
 
+#diff2html-output mark.diff-search-hit {
+    background: rgba(245, 158, 11, 0.35);
+    color: inherit;
+    border-radius: 3px;
+    padding: 0 1px;
+}
+
+body.dark-theme #diff2html-output mark.diff-search-hit {
+    background: rgba(250, 204, 21, 0.35);
+}
+
 /* ============================================================
    TOGGLE CONTEXT LINES (Show Only Differences by Default)
 ============================================================ */

@@ -57,11 +57,14 @@
     top: 78px;
     right: 18px;
     width: min(420px, calc(100vw - 24px));
+    max-height: calc(100vh - 96px);
     border: 1px solid var(--border-color);
     border-radius: 16px;
     background: var(--surface-color);
     box-shadow: 0 24px 48px rgba(15, 23, 42, 0.2);
     padding: 18px;
+    overflow-y: auto;
+    overscroll-behavior: contain;
     z-index: 50;
 }
 
@@ -87,6 +90,27 @@
 .shortcuts-list {
     display: grid;
     gap: 10px;
+}
+
+.shortcuts-help-section {
+    display: grid;
+    gap: 10px;
+    margin-top: 16px;
+    padding-top: 16px;
+    border-top: 1px solid var(--border-color);
+}
+
+.shortcuts-help-title {
+    font-size: 12px;
+    font-weight: 700;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    color: var(--text-secondary);
+}
+
+.shortcut-item-info kbd {
+    font-family: inherit;
+    font-size: 11px;
 }
 
 .shortcut-item {
@@ -131,6 +155,7 @@
         right: 12px;
         left: 12px;
         width: auto;
+        max-height: calc(100vh - 132px);
     }
 
     .shortcut-item {
@@ -171,6 +196,65 @@
 .app-tagline {
     font-size: 12px;
     opacity: 0.7;
+}
+
+.compare-options {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    flex-wrap: wrap;
+}
+
+.option-toggle {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    padding: 8px 10px;
+    border-radius: 999px;
+    border: 1px solid var(--border-color);
+    background: var(--panel-bg);
+    color: var(--text-color);
+    font-size: 12px;
+    font-weight: 500;
+    cursor: pointer;
+}
+
+.option-toggle input {
+    margin: 0;
+}
+
+.diff-search-group {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    min-width: 220px;
+}
+
+.diff-search-input,
+.download-format-select {
+    border: 1px solid var(--border-color);
+    background: var(--surface-color);
+    color: var(--text-color);
+    border-radius: 10px;
+    padding: 8px 10px;
+    font-size: 12px;
+}
+
+.diff-search-input {
+    width: 100%;
+}
+
+.diff-search-count {
+    font-size: 12px;
+    color: var(--text-secondary);
+    min-width: 72px;
+    text-align: right;
+}
+
+.download-group {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
 }
 
 /* Tabs */
@@ -603,6 +687,20 @@ body.wrap-lines .code-editor {
 
 /* Responsive adjustments */
 @media (max-width: 768px) {
+    .compare-options {
+        width: 100%;
+    }
+
+    .diff-header {
+        align-items: stretch;
+        flex-direction: column;
+    }
+
+    .diff-search-group {
+        min-width: 0;
+        width: 100%;
+    }
+
     .diff-header-actions {
         gap: 3px;
     }
@@ -615,6 +713,11 @@ body.wrap-lines .code-editor {
         width: 28px;
         padding: 0;
         justify-content: center;
+    }
+
+    .download-group .btn {
+        width: auto;
+        padding: 0 8px;
     }
     
     .diff-header-actions .divider {
