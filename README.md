@@ -1,7 +1,7 @@
 # 🔀 DiffBoard – Code Comparison Tool
 
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
-[![Version](https://img.shields.io/badge/Version-1.1.2-blue.svg)](#)
+[![Version](https://img.shields.io/badge/Version-1.1.3-blue.svg)](#)
 [![Chrome Extension](https://img.shields.io/badge/Chrome-Extension-green.svg?logo=google-chrome)](#)
 
 > **Tagline**: *Compare code, text, and JSON like a developer — fast, visual, and distraction-free.*
@@ -51,6 +51,7 @@ DiffBoard focuses on **clarity, speed, and usability**, without overwhelming you
 * Copy **right input**
 * Copy **full diff**
 * Copy **only added** or **only removed** lines
+* Download the rendered comparison as `diff.txt` or `diff.html`
 * Toast notifications confirm every action
 
 ### 🧩 Format Tools
@@ -64,6 +65,19 @@ DiffBoard focuses on **clarity, speed, and usability**, without overwhelming you
 * Drag and drop files directly onto either editor
 * Supports common text, code, markup, config, and log file types
 * Helpful for quick comparisons without manual copy and paste
+
+### 🔎 Diff Workflow Tools
+
+* Find text inside the rendered diff with live match highlighting
+* Export comparison results as plain text or HTML for ticketing and sharing
+* Ignore whitespace, case, and line-ending differences when comparing
+
+### 💾 Session Recovery
+
+* Restores left editor content after refresh
+* Restores right editor content after refresh
+* Restores the active Editors/Diff tab
+* Keeps theme preference between sessions
 
 ### 🗂️ Supported File Types
 
@@ -184,10 +198,14 @@ DiffBoard is designed with:
 ✔ Broad support for common web, config, script, and source file types
 ✔ Reusable format tools
 ✔ Diff statistics and copy utilities
+✔ Downloadable diff exports in TXT and HTML formats
+✔ Search inside rendered diff results
+✔ Ignore whitespace, case, and line-ending options
 ✔ Keyboard shortcuts and in-app shortcut help
 ✔ Dark / light themes
 ✔ Wrap toggles for editors and diff output
 ✔ Loading feedback for large comparisons
+✔ Last-session editor and tab restore after refresh
 
 ---
 

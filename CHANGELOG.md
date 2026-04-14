@@ -9,6 +9,18 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 - _No unreleased changes._
 
+## [1.1.3] - 2026-04-14
+
+### Added
+- **Session restore** - Restores the last editor contents and active tab after refresh so work-in-progress comparisons are not lost.
+- **Diff download export** - Added `Download Diff` support with `diff.txt` and `diff.html` export formats.
+- **Find in diff** - Added in-diff search with live match highlighting for rendered comparison results.
+- **Ignore compare options** - Added toggles for ignoring whitespace, case, and line-ending differences during comparison.
+- **Diff tools guidance** - Expanded the shortcuts/help modal to explain in-diff search, export formats, and ignore options.
+
+### Fixed
+- **Refresh continuity** - Preserved the active workspace state instead of resetting the interface after page reload.
+
 ## [1.1.2] - 2026-04-14
 
 ### Added
@@ -87,6 +99,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## Version History Summary
 
+- **1.1.3** (Apr 2026) - Session recovery, diff export, in-diff search, ignore options, and updated in-app guidance.
 - **1.1.2** (Apr 2026) - File drag-and-drop, expanded shortcuts, wrap controls, loading feedback, and debounced compare rendering.
 - **1.1.1** (Apr 2026) - Toolbar branding polish and finalized extension icon asset mappings.
 - **1.1.0** (Apr 2026) - Major refactor: modular architecture, generic format tools, keyboard shortcuts, SVG sprite icons, and full project structure cleanup.
@@ -94,7 +107,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ---
 
-[Unreleased]: https://github.com/Kartikpatkar/diff-board/compare/v1.1.2...HEAD
+[Unreleased]: https://github.com/Kartikpatkar/diff-board/compare/v1.1.3...HEAD
+[1.1.3]: https://github.com/Kartikpatkar/diff-board/compare/v1.1.2...v1.1.3
 [1.1.2]: https://github.com/Kartikpatkar/diff-board/compare/v1.1.1...v1.1.2
 [1.1.1]: https://github.com/Kartikpatkar/diff-board/compare/v1.1.0...v1.1.1
 [1.1.0]: https://github.com/Kartikpatkar/diff-board/compare/v1.0.1...v1.1.0

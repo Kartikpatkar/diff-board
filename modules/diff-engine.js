@@ -22,19 +22,31 @@ function computeStatsFromPatch(patch) {
     return { added, removed, modified };
 }
 
-function createUnifiedDiff(oldStr, newStr) {
+function normalizeForCompare(value, options) {
+    if (!options.ignoreLineEndings) return value;
+    return value.replace(/\r\n?/g, "\n");
+}
+
+function createUnifiedDiff(oldStr, newStr, options) {
     if (!window.Diff) {
         return { text: "", stats: { added: 0, removed: 0, modified: 0 } };
     }
 
+    const normalizedOld = normalizeForCompare(oldStr, options);
+    const normalizedNew = normalizeForCompare(newStr, options);
+
     const patch = window.Diff.structuredPatch(
         "Original",
         "Modified",
-        oldStr,
-        newStr,
+        normalizedOld,
+        normalizedNew,
         "",
         "",
-        { context: Number.MAX_SAFE_INTEGER }
+        {
+            context: Number.MAX_SAFE_INTEGER,
+            ignoreWhitespace: options.ignoreWhitespace,
+            ignoreCase: options.ignoreCase
+        }
     );
 
     let output = `--- ${patch.oldFileName}\n+++ ${patch.newFileName}\n`;
@@ -80,6 +92,84 @@ function waitForNextPaint() {
     });
 }
 
+function clearDiffSearchHighlights(diffOutput) {
+    diffOutput.querySelectorAll("mark.diff-search-hit").forEach((mark) => {
+        const parent = mark.parentNode;
+        if (!parent) return;
+        parent.replaceChild(document.createTextNode(mark.textContent || ""), mark);
+        parent.normalize();
+    });
+}
+
+function highlightMatchesInTextNode(textNode, query) {
+    const text = textNode.textContent || "";
+    const source = text.toLowerCase();
+    const target = query.toLowerCase();
+    let startIndex = 0;
+    let matchIndex = source.indexOf(target, startIndex);
+
+    if (matchIndex === -1) return 0;
+
+    const fragment = document.createDocumentFragment();
+    let count = 0;
+
+    while (matchIndex !== -1) {
+        if (matchIndex > startIndex) {
+            fragment.appendChild(document.createTextNode(text.slice(startIndex, matchIndex)));
+        }
+
+        const mark = document.createElement("mark");
+        mark.className = "diff-search-hit";
+        mark.textContent = text.slice(matchIndex, matchIndex + target.length);
+        fragment.appendChild(mark);
+        count += 1;
+
+        startIndex = matchIndex + target.length;
+        matchIndex = source.indexOf(target, startIndex);
+    }
+
+    if (startIndex < text.length) {
+        fragment.appendChild(document.createTextNode(text.slice(startIndex)));
+    }
+
+    textNode.parentNode?.replaceChild(fragment, textNode);
+    return count;
+}
+
+async function buildHtmlDownloadDocument(renderedHtml) {
+    let diff2HtmlCss = "";
+
+    try {
+        const response = await fetch(chrome.runtime.getURL("libs/diff2html/diff2html.min.css"));
+        diff2HtmlCss = await response.text();
+    } catch {
+        diff2HtmlCss = "";
+    }
+
+    return `<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>DiffBoard Export</title>
+    <style>
+        body { margin: 0; padding: 24px; font-family: Inter, Arial, sans-serif; background: #f8fafc; color: #0f172a; }
+        .export-shell { max-width: 1400px; margin: 0 auto; }
+        .export-title { font-size: 24px; font-weight: 700; margin-bottom: 8px; }
+        .export-subtitle { font-size: 14px; color: #475569; margin-bottom: 18px; }
+        ${diff2HtmlCss}
+    </style>
+</head>
+<body>
+    <div class="export-shell">
+        <div class="export-title">DiffBoard Export</div>
+        <div class="export-subtitle">Generated ${new Date().toISOString()}</div>
+        ${renderedHtml}
+    </div>
+</body>
+</html>`;
+}
+
 const COMPARE_DEBOUNCE_MS = 180;
 
 export function initDiffEngine({ leftEditor, rightEditor, diffOutput, safeBind, showToast }) {
@@ -89,9 +179,97 @@ export function initDiffEngine({ leftEditor, rightEditor, diffOutput, safeBind, 
     const diffTabButton = document.querySelector('[data-tab="diff-tab"]');
     const compareButton = document.getElementById("compare-btn");
     const compareLoading = document.getElementById("compare-loading");
+    const diffSearchInput = document.getElementById("diff-search");
+    const diffSearchCount = document.getElementById("diff-search-count");
+    const downloadFormatSelect = document.getElementById("download-format");
     const tabs = document.querySelectorAll(".tab-btn");
     let compareDebounceTimer = null;
     let compareInFlight = false;
+    let lastRenderedPatch = "";
+    let lastRenderedHtml = "";
+
+    function getCompareOptions() {
+        return {
+            ignoreWhitespace: document.getElementById("ignore-whitespace")?.checked ?? false,
+            ignoreCase: document.getElementById("ignore-case")?.checked ?? false,
+            ignoreLineEndings: document.getElementById("ignore-line-endings")?.checked ?? false
+        };
+    }
+
+    function updateDiffSearchCount(count, query) {
+        if (!diffSearchCount) return;
+
+        diffSearchCount.textContent = query
+            ? `${count} match${count === 1 ? "" : "es"}`
+            : "";
+    }
+
+    function applyDiffSearch() {
+        const query = diffSearchInput?.value.trim() || "";
+        clearDiffSearchHighlights(diffOutput);
+
+        if (!query) {
+            updateDiffSearchCount(0, "");
+            return;
+        }
+
+        let totalMatches = 0;
+        const containers = diffOutput.querySelectorAll(".d2h-code-line-ctn, .d2h-code-side-line-ctn");
+
+        containers.forEach((container) => {
+            const walker = document.createTreeWalker(container, NodeFilter.SHOW_TEXT, {
+                acceptNode(node) {
+                    return node.textContent?.trim()
+                        ? NodeFilter.FILTER_ACCEPT
+                        : NodeFilter.FILTER_REJECT;
+                }
+            });
+
+            const textNodes = [];
+            let currentNode = walker.nextNode();
+            while (currentNode) {
+                textNodes.push(currentNode);
+                currentNode = walker.nextNode();
+            }
+
+            textNodes.forEach((textNode) => {
+                totalMatches += highlightMatchesInTextNode(textNode, query);
+            });
+        });
+
+        updateDiffSearchCount(totalMatches, query);
+        diffOutput.querySelector("mark.diff-search-hit")?.scrollIntoView({ block: "center", behavior: "smooth" });
+    }
+
+    async function downloadDiff() {
+        if (!lastRenderedPatch) {
+            showToast?.("Nothing to Download", "Generate a diff before downloading it", "error");
+            return;
+        }
+
+        const format = downloadFormatSelect?.value || "txt";
+        let fileName = "diff.txt";
+        let type = "text/plain;charset=utf-8";
+        let content = lastRenderedPatch;
+
+        if (format === "html") {
+            fileName = "diff.html";
+            type = "text/html;charset=utf-8";
+            content = await buildHtmlDownloadDocument(lastRenderedHtml || diffOutput.innerHTML);
+        }
+
+        const blob = new Blob([content], { type });
+        const objectUrl = URL.createObjectURL(blob);
+        const anchor = document.createElement("a");
+        anchor.href = objectUrl;
+        anchor.download = fileName;
+        document.body.appendChild(anchor);
+        anchor.click();
+        anchor.remove();
+        URL.revokeObjectURL(objectUrl);
+
+        showToast?.("Download Ready", `${fileName} downloaded`, "success");
+    }
 
     function switchTab(target) {
         tabs.forEach((t) => t.classList.remove("active"));
@@ -105,6 +283,12 @@ export function initDiffEngine({ leftEditor, rightEditor, diffOutput, safeBind, 
             diffTabButton?.classList.add("active");
             diffSection?.classList.add("active");
             if (diffSection) diffSection.scrollTop = 0;
+        }
+
+        try {
+            localStorage.setItem("active-tab", target);
+        } catch {
+            // Ignore storage errors and keep the UI functional.
         }
     }
 
@@ -147,8 +331,8 @@ export function initDiffEngine({ leftEditor, rightEditor, diffOutput, safeBind, 
     async function runComparison() {
         if (compareInFlight) return;
 
-        const leftText = leftEditor.value.trim();
-        const rightText = rightEditor.value.trim();
+        const leftText = leftEditor.value;
+        const rightText = rightEditor.value;
 
         if (!leftText && !rightText) {
             showToast?.("Nothing to Compare", "Both editors are empty", "error");
@@ -161,7 +345,8 @@ export function initDiffEngine({ leftEditor, rightEditor, diffOutput, safeBind, 
         await waitForNextPaint();
 
         try {
-            const { text: patch, stats } = createUnifiedDiff(leftText, rightText);
+            const compareOptions = getCompareOptions();
+            const { text: patch, stats } = createUnifiedDiff(leftText, rightText, compareOptions);
 
             const html = window.Diff2Html.html(patch, {
                 drawFileList: false,
@@ -172,9 +357,12 @@ export function initDiffEngine({ leftEditor, rightEditor, diffOutput, safeBind, 
                 context: Number.MAX_SAFE_INTEGER
             });
 
+            lastRenderedPatch = patch;
+            lastRenderedHtml = html;
             diffOutput.innerHTML = html;
             updateSummary(stats);
             markDiffRows(diffOutput);
+            applyDiffSearch();
 
             diffOutput.classList.remove("show-diff-only");
             diffOutput.classList.add("show-all");
@@ -190,6 +378,8 @@ export function initDiffEngine({ leftEditor, rightEditor, diffOutput, safeBind, 
 
             showToast?.("Comparison Complete", "Diff generated successfully", "success");
         } catch (error) {
+            lastRenderedPatch = "";
+            lastRenderedHtml = "";
             diffOutput.innerHTML = "";
             showToast?.("Comparison Failed", error?.message || "Unable to render diff", "error");
         } finally {
@@ -216,6 +406,12 @@ export function initDiffEngine({ leftEditor, rightEditor, diffOutput, safeBind, 
     safeBind("back-to-editors", () => switchTab("editors"));
     safeBind("toggle-context", toggleContextMode);
     safeBind("compare-btn", compareNow);
+    safeBind("download-diff", () => {
+        downloadDiff().catch((error) => {
+            showToast?.("Download Failed", error?.message || "Unable to download diff", "error");
+        });
+    });
+    diffSearchInput?.addEventListener("input", applyDiffSearch);
 
     return { switchTab, compareNow };
 }

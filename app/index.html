@@ -95,6 +95,21 @@
                     <kbd>Ctrl/Cmd + 2</kbd>
                 </div>
             </div>
+            <div class="shortcuts-help-section" aria-label="Diff tools reference">
+                <div class="shortcuts-help-title">Diff tools</div>
+                <div class="shortcut-item shortcut-item-info">
+                    <span>Find in diff</span>
+                    <kbd>Use the Diff search box</kbd>
+                </div>
+                <div class="shortcut-item shortcut-item-info">
+                    <span>Download Diff</span>
+                    <kbd>Export as TXT or HTML</kbd>
+                </div>
+                <div class="shortcut-item shortcut-item-info">
+                    <span>Ignore options</span>
+                    <kbd>Whitespace, case, line endings</kbd>
+                </div>
+            </div>
         </section>
 
         <!-- TABS -->
@@ -153,6 +168,20 @@
                         <button class="btn btn-secondary" id="wrap-toggle" type="button" aria-pressed="false" title="Toggle wrapped lines">
                             Wrap
                         </button>
+                        <div class="compare-options" aria-label="Ignore compare options">
+                            <label class="option-toggle" for="ignore-whitespace">
+                                <input type="checkbox" id="ignore-whitespace">
+                                <span>Ignore whitespace</span>
+                            </label>
+                            <label class="option-toggle" for="ignore-case">
+                                <input type="checkbox" id="ignore-case">
+                                <span>Ignore case</span>
+                            </label>
+                            <label class="option-toggle" for="ignore-line-endings">
+                                <input type="checkbox" id="ignore-line-endings">
+                                <span>Ignore line endings</span>
+                            </label>
+                        </div>
                         <div class="format-tools-group">
                             <select id="format-action" class="format-action-select" title="Format action">
                                 <option value="format">Format</option>
@@ -190,6 +219,10 @@
                         <div class="diff-title">Comparison Results</div>
                         <div class="diff-subtitle">Side-by-side diff with full context</div>
                     </div>
+                    <div class="diff-search-group">
+                        <input id="diff-search" class="diff-search-input" type="search" placeholder="Find in diff">
+                        <span class="diff-search-count" id="diff-search-count" aria-live="polite"></span>
+                    </div>
                     <div class="summary-stats">
                         <div class="stat-item stat-added">+ <span id="added-count">0</span></div>
                         <div class="stat-item stat-removed">– <span id="removed-count">0</span></div>
@@ -212,6 +245,15 @@
                             </svg>
                             <span>Copy All</span>
                         </button>
+                        <div class="download-group">
+                            <select id="download-format" class="download-format-select" title="Download format">
+                                <option value="txt">TXT</option>
+                                <option value="html">HTML</option>
+                            </select>
+                            <button class="btn btn-small btn-icon" id="download-diff" title="Download diff">
+                                <span>Download Diff</span>
+                            </button>
+                        </div>
                         <button class="btn btn-small btn-icon btn-success" id="copy-added" title="Copy Added Lines">
                             <span>Copy +</span>
                         </button>
