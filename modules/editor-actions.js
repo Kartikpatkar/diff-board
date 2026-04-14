@@ -50,6 +50,8 @@ const SUPPORTED_FILE_EXTENSIONS = new Set([
     ".cls"
 ]);
 
+const SUPPORTED_FILE_TYPES_MESSAGE = `Supported types: ${[...SUPPORTED_FILE_EXTENSIONS].join(", ")}`;
+
 function getExtension(fileName) {
     const lastDot = fileName.lastIndexOf(".");
     if (lastDot === -1) return "";
@@ -176,7 +178,7 @@ export function initEditorActions({ leftEditor, rightEditor, diffOutput, safeBin
             if (!isSupportedTextFile(file)) {
                 showToast?.(
                     "Unsupported File",
-                    "Supported types: .json, .txt, .js, .xml, .log, .cls",
+                    SUPPORTED_FILE_TYPES_MESSAGE,
                     "error"
                 );
                 return;
