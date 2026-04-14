@@ -82,6 +82,13 @@
     padding: 0 1.5em;
 }
 
+body.wrap-lines #diff2html-output .d2h-code-line-ctn,
+body.wrap-lines #diff2html-output .d2h-code-side-line-ctn {
+    white-space: pre-wrap !important;
+    overflow-wrap: anywhere;
+    word-break: break-word;
+}
+
 /* ============================================================
    TOGGLE CONTEXT LINES (Show Only Differences by Default)
 ============================================================ */
