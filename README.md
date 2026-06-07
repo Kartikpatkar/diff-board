@@ -144,8 +144,8 @@ DiffBoard is designed with:
 ### 🔷 Light Mode
 
 ![Main Page - Light Theme](./assets/screenshot/Main%20Page%20-%20Light%20Theme.png)
-![Keyboard Shortcuts Screen - Light Theme.png](./assets/screenshot/Keyboard%20Shortcuts%20Screen%20-%20Light%20Theme.png)
-![Diff View - Light Theme.png](./assets/screenshot/Diff%20View%20-%20Light%20Theme.png)
+![Keyboard Shortcuts Screen - Light Theme](./assets/screenshot/Keyboard%20Shortcuts%20Screen%20-%20Light%20Theme.png)
+![Diff View - Light Theme](./assets/screenshot/Diff%20Screen%20-%20Light%20Theme.png)
 
 ### 🌑 Dark Mode
 
