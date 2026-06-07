@@ -228,78 +228,82 @@
         <div id="diff-tab" class="tab-content">
             <div class="diff-card">
                 <div class="diff-header">
-                    <div>
-                        <div class="diff-title">Comparison Results</div>
-                        <div class="diff-subtitle">Side-by-side diff with full context</div>
-                    </div>
-                    <div class="diff-search-group">
-                        <input id="diff-search" class="diff-search-input" type="search" placeholder="Find in diff">
-                        <button id="search-prev" class="search-nav-btn" type="button" title="Previous match"><i class="fas fa-chevron-up"></i></button>
-                        <button id="search-next" class="search-nav-btn" type="button" title="Next match"><i class="fas fa-chevron-down"></i></button>
-                        <span class="diff-search-count" id="diff-search-count" aria-live="polite"></span>
-                    </div>
-                    <div class="summary-stats">
-                        <div class="stat-item stat-added">+ <span id="added-count">0</span></div>
-                        <div class="stat-item stat-removed">– <span id="removed-count">0</span></div>
-                        <div class="stat-item stat-modified">~ <span id="modified-count">0</span></div>
-                    </div>
-                    <div class="diff-header-actions">
-                        <button class="btn btn-small btn-icon" id="toggle-context" title="Toggle Context">
-                            <svg width="14" height="14" viewBox="0 0 24 24" aria-hidden="true">
-                                <use href="../assets/icons/sprite.svg#icon-context"></use>
-                            </svg>
-                            <span>Show All</span>
-                        </button>
-                        <button class="btn btn-small btn-icon" id="wrap-toggle-diff" type="button" aria-pressed="false" title="Toggle wrapped lines in diff">
-                            <span>Wrap</span>
-                        </button>
-                        <div class="divider"></div>
-                        <select id="diff-layout-select" class="download-format-select" title="Diff layout">
-                            <option value="side-by-side">Side-by-side</option>
-                            <option value="line-by-line">Unified</option>
-                        </select>
-                        <div class="divider"></div>
-                        <button class="btn btn-small btn-icon" id="copy-diff" title="Copy All">
-                            <svg width="14" height="14" viewBox="0 0 24 24" aria-hidden="true">
-                                <use href="../assets/icons/sprite.svg#icon-copy"></use>
-                            </svg>
-                            <span>Copy All</span>
-                        </button>
-                        <button class="btn btn-small btn-icon" id="copy-patch" title="Copy Unified Patch">
-                            <svg width="14" height="14" viewBox="0 0 24 24" aria-hidden="true">
-                                <use href="../assets/icons/sprite.svg#icon-copy"></use>
-                            </svg>
-                            <span>Copy Patch</span>
-                        </button>
-                        <div class="download-group">
-                            <select id="download-format" class="download-format-select" title="Download format">
-                                <option value="txt">TXT</option>
-                                <option value="html">HTML</option>
-                            </select>
-                            <button class="btn btn-small btn-icon" id="download-diff" title="Download diff">
-                                <span>Download Diff</span>
+                    <!-- Row 1: Title and Main Controls -->
+                    <div class="diff-header-top-row">
+                        <div>
+                            <div class="diff-title">Comparison Results</div>
+                            <div class="diff-subtitle">Side-by-side or unified view with statistics</div>
+                        </div>
+                        <div class="summary-stats">
+                            <div class="stat-item stat-added">+ <span id="added-count">0</span></div>
+                            <div class="stat-item stat-removed">– <span id="removed-count">0</span></div>
+                            <div class="stat-item stat-modified">~ <span id="modified-count">0</span></div>
+                        </div>
+                        <div class="diff-header-primary-actions">
+                            <button class="btn btn-small btn-icon" id="swap-in-diff" title="Swap Left and Right Panels">
+                                <svg width="14" height="14" viewBox="0 0 24 24" aria-hidden="true">
+                                    <use href="../assets/icons/sprite.svg#icon-swap"></use>
+                                </svg>
+                                <span>Swap</span>
+                            </button>
+                            <button class="btn btn-small btn-icon" id="back-to-editors" title="Back to Editors">
+                                <svg width="14" height="14" viewBox="0 0 24 24" aria-hidden="true">
+                                    <use href="../assets/icons/sprite.svg#icon-back"></use>
+                                </svg>
+                                <span>Back</span>
                             </button>
                         </div>
-                        <button class="btn btn-small btn-icon btn-success" id="copy-added" title="Copy Added Lines">
-                            <span>Copy +</span>
-                        </button>
-                        <button class="btn btn-small btn-icon btn-danger" id="copy-removed" title="Copy Removed Lines">
-                            <span>Copy –</span>
-                        </button>
-                        <div class="divider"></div>
-                        <button class="btn btn-small btn-icon" id="swap-in-diff" title="Swap Left and Right Panels">
-                            <svg width="14" height="14" viewBox="0 0 24 24" aria-hidden="true">
-                                <use href="../assets/icons/sprite.svg#icon-swap"></use>
-                            </svg>
-                            <span>Swap</span>
-                        </button>
-                        <div class="divider"></div>
-                        <button class="btn btn-small btn-icon" id="back-to-editors" title="Back to Editors">
-                            <svg width="14" height="14" viewBox="0 0 24 24" aria-hidden="true">
-                                <use href="../assets/icons/sprite.svg#icon-back"></use>
-                            </svg>
-                            <span>Back</span>
-                        </button>
+                    </div>
+
+                    <!-- Row 2: Secondary Toolbars (Settings, Search, Copy & Download Actions) -->
+                    <div class="diff-header-toolbar-row">
+                        <!-- Group 1: View Settings -->
+                        <div class="diff-toolbar-group view-settings">
+                            <select id="diff-layout-select" class="download-format-select" title="Diff layout">
+                                <option value="side-by-side">Side-by-side</option>
+                                <option value="line-by-line">Unified</option>
+                            </select>
+                            <button class="btn btn-small btn-icon" id="toggle-context" title="Toggle Context">
+                                <svg width="14" height="14" viewBox="0 0 24 24" aria-hidden="true">
+                                    <use href="../assets/icons/sprite.svg#icon-context"></use>
+                                </svg>
+                                <span>Show All</span>
+                            </button>
+                            <button class="btn btn-small btn-icon" id="wrap-toggle-diff" type="button" aria-pressed="false" title="Toggle wrapped lines in diff">
+                                <span>Wrap</span>
+                            </button>
+                        </div>
+
+                        <!-- Group 2: Centered Search Bar -->
+                        <div class="diff-search-group">
+                            <input id="diff-search" class="diff-search-input" type="search" placeholder="Find in diff">
+                            <button id="search-prev" class="search-nav-btn" type="button" title="Previous match"><i class="fas fa-chevron-up"></i></button>
+                            <button id="search-next" class="search-nav-btn" type="button" title="Next match"><i class="fas fa-chevron-down"></i></button>
+                            <span class="diff-search-count" id="diff-search-count" aria-live="polite"></span>
+                        </div>
+
+                        <!-- Group 3: Copy and Download Actions -->
+                        <div class="diff-toolbar-group actions-group">
+                            <!-- Consolidated Copy options -->
+                            <select id="copy-action-select" class="download-format-select" title="Copy to clipboard">
+                                <option value="" disabled selected>📋 Copy...</option>
+                                <option value="all">Full Diff (View)</option>
+                                <option value="patch">Unified Diff Patch</option>
+                                <option value="added">Added (+) Lines</option>
+                                <option value="removed">Removed (-) Lines</option>
+                            </select>
+
+                            <!-- Consolidated Download Group -->
+                            <div class="download-group">
+                                <select id="download-format" class="download-format-select" title="Download format">
+                                    <option value="txt">TXT</option>
+                                    <option value="html">HTML</option>
+                                </select>
+                                <button class="btn btn-small btn-icon" id="download-diff" title="Download diff">
+                                    <span>Download Diff</span>
+                                </button>
+                            </div>
+                        </div>
                     </div>
                 </div>
 

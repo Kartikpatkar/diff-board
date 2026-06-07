@@ -111,50 +111,49 @@ export function initEditorActions({ leftEditor, rightEditor, diffOutput, safeBin
         );
     });
 
-    safeBind("copy-diff", () => {
-        copyText(
-            diffOutput.innerText,
-            () => showToast?.("Copied", "Full diff copied", "success"),
-            () => showToast?.("Copy Failed", "Unable to copy full diff", "error")
-        );
-    });
+    safeBind("copy-action-select", (event) => {
+        const action = event.target.value;
+        if (!action) return;
 
-    safeBind("copy-patch", () => {
-        const patch = diffOutput.lastPatch;
-        if (!patch) {
-            showToast?.("Nothing to Copy", "Generate a diff before copying the patch", "error");
-            return;
+        if (action === "all") {
+            copyText(
+                diffOutput.innerText,
+                () => showToast?.("Copied", "Full diff copied", "success"),
+                () => showToast?.("Copy Failed", "Unable to copy full diff", "error")
+            );
+        } else if (action === "patch") {
+            const patch = diffOutput.lastPatch;
+            if (!patch) {
+                showToast?.("Nothing to Copy", "Generate a diff before copying the patch", "error");
+            } else {
+                copyText(
+                    patch,
+                    () => showToast?.("Copied", "Unified diff patch copied", "success"),
+                    () => showToast?.("Copy Failed", "Unable to copy patch", "error")
+                );
+            }
+        } else if (action === "added") {
+            const added = [...document.querySelectorAll(".d2h-ins")]
+                .map((el) => el.innerText)
+                .join("\n");
+            copyText(
+                added || "No added lines",
+                () => showToast?.("Copied", "Added (+) lines copied", "success"),
+                () => showToast?.("Copy Failed", "Unable to copy added lines", "error")
+            );
+        } else if (action === "removed") {
+            const removed = [...document.querySelectorAll(".d2h-del")]
+                .map((el) => el.innerText)
+                .join("\n");
+            copyText(
+                removed || "No removed lines",
+                () => showToast?.("Copied", "Removed (-) lines copied", "success"),
+                () => showToast?.("Copy Failed", "Unable to copy removed lines", "error")
+            );
         }
-        copyText(
-            patch,
-            () => showToast?.("Copied", "Unified diff patch copied", "success"),
-            () => showToast?.("Copy Failed", "Unable to copy patch", "error")
-        );
-    });
 
-    safeBind("copy-added", () => {
-        const added = [...document.querySelectorAll(".d2h-ins")]
-            .map((el) => el.innerText)
-            .join("\n");
-
-        copyText(
-            added || "No added lines",
-            () => showToast?.("Copied", "Added (+) lines copied", "success"),
-            () => showToast?.("Copy Failed", "Unable to copy added lines", "error")
-        );
-    });
-
-    safeBind("copy-removed", () => {
-        const removed = [...document.querySelectorAll(".d2h-del")]
-            .map((el) => el.innerText)
-            .join("\n");
-
-        copyText(
-            removed || "No removed lines",
-            () => showToast?.("Copied", "Removed (-) lines copied", "success"),
-            () => showToast?.("Copy Failed", "Unable to copy removed lines", "error")
-        );
-    });
+        event.target.value = "";
+    }, "change");
 
     function bindFileDrop(editor, label) {
         const panel = editor?.closest(".editor-panel");
