@@ -28,6 +28,13 @@ export function initUi({ showToast }) {
         body.classList.add(theme);
         localStorage.setItem("theme", theme);
 
+        const hljsLink = document.getElementById("highlight-theme");
+        if (hljsLink) {
+            hljsLink.href = theme === "dark-theme"
+                ? "../libs/highlight/github-dark.min.css"
+                : "../libs/highlight/github.min.css";
+        }
+
         if (themeToggle) {
             themeToggle.checked = theme === "dark-theme";
         }
@@ -69,6 +76,30 @@ export function initUi({ showToast }) {
 
         shortcutsButton?.focus();
     }
+
+    const handleModalFocusTrap = (event) => {
+        if (!shortcutsModal || shortcutsModal.hidden) return;
+        if (event.key !== "Tab") return;
+
+        const focusables = Array.from(shortcutsModal.querySelectorAll("button, [tabindex='0']"));
+        if (focusables.length === 0) return;
+
+        const first = focusables[0];
+        const last = focusables[focusables.length - 1];
+
+        if (event.shiftKey) {
+            if (document.activeElement === first) {
+                last.focus();
+                event.preventDefault();
+            }
+        } else {
+            if (document.activeElement === last) {
+                first.focus();
+                event.preventDefault();
+            }
+        }
+    };
+    document.addEventListener("keydown", handleModalFocusTrap);
 
     const savedTheme = localStorage.getItem("theme") || "light-theme";
     const savedWrapPreference = localStorage.getItem("wrap-lines") === "true";

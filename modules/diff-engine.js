@@ -187,6 +187,12 @@ export function initDiffEngine({ leftEditor, rightEditor, diffOutput, safeBind, 
     let compareInFlight = false;
     let lastRenderedPatch = "";
     let lastRenderedHtml = "";
+    let searchHits = [];
+    let searchHitIndex = -1;
+    let isDirty = false;
+
+    leftEditor?.addEventListener("input", () => { isDirty = true; });
+    rightEditor?.addEventListener("input", () => { isDirty = true; });
 
     function getCompareOptions() {
         return {
@@ -204,11 +210,30 @@ export function initDiffEngine({ leftEditor, rightEditor, diffOutput, safeBind, 
             : "";
     }
 
+    function updateSearchSelection(newIndex) {
+        if (searchHits.length === 0) return;
+
+        if (searchHitIndex >= 0 && searchHitIndex < searchHits.length) {
+            searchHits[searchHitIndex].classList.remove("active-hit");
+        }
+
+        searchHitIndex = (newIndex + searchHits.length) % searchHits.length;
+        const currentHit = searchHits[searchHitIndex];
+        currentHit.classList.add("active-hit");
+        currentHit.scrollIntoView({ block: "center", behavior: "smooth" });
+
+        if (diffSearchCount) {
+            diffSearchCount.textContent = `${searchHitIndex + 1} of ${searchHits.length}`;
+        }
+    }
+
     function applyDiffSearch() {
         const query = diffSearchInput?.value.trim() || "";
         clearDiffSearchHighlights(diffOutput);
 
         if (!query) {
+            searchHits = [];
+            searchHitIndex = -1;
             updateDiffSearchCount(0, "");
             return;
         }
@@ -237,8 +262,14 @@ export function initDiffEngine({ leftEditor, rightEditor, diffOutput, safeBind, 
             });
         });
 
-        updateDiffSearchCount(totalMatches, query);
-        diffOutput.querySelector("mark.diff-search-hit")?.scrollIntoView({ block: "center", behavior: "smooth" });
+        searchHits = Array.from(diffOutput.querySelectorAll("mark.diff-search-hit"));
+        searchHitIndex = -1;
+
+        if (searchHits.length > 0) {
+            updateSearchSelection(0);
+        } else {
+            updateDiffSearchCount(0, query);
+        }
     }
 
     async function downloadDiff() {
@@ -348,10 +379,13 @@ export function initDiffEngine({ leftEditor, rightEditor, diffOutput, safeBind, 
             const compareOptions = getCompareOptions();
             const { text: patch, stats } = createUnifiedDiff(leftText, rightText, compareOptions);
 
+            const layoutSelect = document.getElementById("diff-layout-select");
+            const formatLayout = layoutSelect?.value || "side-by-side";
+
             const html = window.Diff2Html.html(patch, {
                 drawFileList: false,
                 matching: "lines",
-                outputFormat: "side-by-side",
+                outputFormat: formatLayout,
                 diffStyle: "word",
                 highlight: true,
                 context: Number.MAX_SAFE_INTEGER
@@ -360,6 +394,9 @@ export function initDiffEngine({ leftEditor, rightEditor, diffOutput, safeBind, 
             lastRenderedPatch = patch;
             lastRenderedHtml = html;
             diffOutput.innerHTML = html;
+            diffOutput.lastPatch = patch; // save for copy patch action
+            isDirty = false; // reset dirty state
+
             updateSummary(stats);
             markDiffRows(diffOutput);
             applyDiffSearch();
@@ -381,6 +418,7 @@ export function initDiffEngine({ leftEditor, rightEditor, diffOutput, safeBind, 
             lastRenderedPatch = "";
             lastRenderedHtml = "";
             diffOutput.innerHTML = "";
+            diffOutput.lastPatch = "";
             showToast?.("Comparison Failed", error?.message || "Unable to render diff", "error");
         } finally {
             compareInFlight = false;
@@ -402,7 +440,13 @@ export function initDiffEngine({ leftEditor, rightEditor, diffOutput, safeBind, 
     }
 
     safeBind("editors-tab-btn", () => switchTab("editors"));
-    safeBind("diff-tab-btn", () => switchTab("diff"));
+    safeBind("diff-tab-btn", () => {
+        if (isDirty) {
+            compareNow();
+        } else {
+            switchTab("diff");
+        }
+    });
     safeBind("back-to-editors", () => switchTab("editors"));
     safeBind("toggle-context", toggleContextMode);
     safeBind("compare-btn", compareNow);
@@ -411,7 +455,28 @@ export function initDiffEngine({ leftEditor, rightEditor, diffOutput, safeBind, 
             showToast?.("Download Failed", error?.message || "Unable to download diff", "error");
         });
     });
+    safeBind("diff-layout-select", () => {
+        compareNow();
+    }, "change");
+    safeBind("search-prev", () => {
+        if (searchHits.length > 0) updateSearchSelection(searchHitIndex - 1);
+    });
+    safeBind("search-next", () => {
+        if (searchHits.length > 0) updateSearchSelection(searchHitIndex + 1);
+    });
     diffSearchInput?.addEventListener("input", applyDiffSearch);
+    diffSearchInput?.addEventListener("keydown", (e) => {
+        if (e.key === "Enter") {
+            e.preventDefault();
+            if (searchHits.length > 0) {
+                if (e.shiftKey) {
+                    updateSearchSelection(searchHitIndex - 1);
+                } else {
+                    updateSearchSelection(searchHitIndex + 1);
+                }
+            }
+        }
+    });
 
     return { switchTab, compareNow };
 }

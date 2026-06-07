@@ -119,6 +119,19 @@ export function initEditorActions({ leftEditor, rightEditor, diffOutput, safeBin
         );
     });
 
+    safeBind("copy-patch", () => {
+        const patch = diffOutput.lastPatch;
+        if (!patch) {
+            showToast?.("Nothing to Copy", "Generate a diff before copying the patch", "error");
+            return;
+        }
+        copyText(
+            patch,
+            () => showToast?.("Copied", "Unified diff patch copied", "success"),
+            () => showToast?.("Copy Failed", "Unable to copy patch", "error")
+        );
+    });
+
     safeBind("copy-added", () => {
         const added = [...document.querySelectorAll(".d2h-ins")]
             .map((el) => el.innerText)
@@ -196,4 +209,34 @@ export function initEditorActions({ leftEditor, rightEditor, diffOutput, safeBin
 
     bindFileDrop(leftEditor, "Original Code");
     bindFileDrop(rightEditor, "Modified Code");
+
+    function bindFileImport(btnId, inputId, editor, label) {
+        const btn = document.getElementById(btnId);
+        const input = document.getElementById(inputId);
+        if (!btn || !input || !editor) return;
+
+        btn.addEventListener("click", () => input.click());
+        input.addEventListener("change", async (event) => {
+            const [file] = event.target.files || [];
+            if (!file) return;
+
+            if (!isSupportedTextFile(file)) {
+                showToast?.("Unsupported File", SUPPORTED_FILE_TYPES_MESSAGE, "error");
+                input.value = "";
+                return;
+            }
+
+            try {
+                editor.value = await readFileAsText(file);
+                editor.dispatchEvent(new Event("input", { bubbles: true }));
+                showToast?.("File Loaded", `${file.name} loaded into ${label}`, "success");
+            } catch (error) {
+                showToast?.("Read Failed", error.message || `Unable to read ${file.name}`, "error");
+            }
+            input.value = "";
+        });
+    }
+
+    bindFileImport("import-left", "file-import-left", leftEditor, "Original Code");
+    bindFileImport("import-right", "file-import-right", rightEditor, "Modified Code");
 }
