@@ -150,7 +150,7 @@ DiffBoard is designed with:
 ### 🌑 Dark Mode
 
 ![Main Page - Dark Theme](./assets/screenshot/Main%20Page%20-%20Dark%20Theme.png)
-![Diff View - Dark Theme.png](./assets/screenshot/Diff%20View%20-%20Dark%20Theme.png)
+![Diff View - Dark Theme](./assets/screenshot/Diff%20Screen%20-%20Dark%20Theme.png)
 
 ---
 
