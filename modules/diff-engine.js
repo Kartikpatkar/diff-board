@@ -86,6 +86,20 @@ function addCollapseControls() {
     // Intentionally left as placeholder.
 }
 
+function showEmptyState(diffOutput) {
+    if (!diffOutput) return;
+    diffOutput.innerHTML = `
+        <div class="diff-empty-state">
+            <svg width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
+                <path d="M16 3H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V5c0-1.1-.9-2-2-2z"/>
+                <path d="M22 7h-2M22 12h-2M22 17h-2M8 8h4M8 12h4M8 16h4"/>
+            </svg>
+            <h3>No comparison results yet</h3>
+            <p>Paste or import code in the Editors tab, then click Compare to see differences.</p>
+        </div>
+    `;
+}
+
 function waitForNextPaint() {
     return new Promise((resolve) => {
         requestAnimationFrame(() => requestAnimationFrame(resolve));
@@ -194,6 +208,8 @@ export function initDiffEngine({ leftEditor, rightEditor, diffOutput, safeBind, 
     leftEditor?.addEventListener("input", () => { isDirty = true; });
     rightEditor?.addEventListener("input", () => { isDirty = true; });
 
+    showEmptyState(diffOutput);
+
     function getCompareOptions() {
         return {
             ignoreWhitespace: document.getElementById("ignore-whitespace")?.checked ?? false,
@@ -279,12 +295,17 @@ export function initDiffEngine({ leftEditor, rightEditor, diffOutput, safeBind, 
         }
 
         const format = downloadFormatSelect?.value || "txt";
-        let fileName = "diff.txt";
+        const now = new Date();
+        const yyyymmdd = now.toISOString().slice(0, 10).replace(/-/g, "");
+        const hhmmss = now.toTimeString().slice(0, 8).replace(/:/g, "");
+        const timestamp = `${yyyymmdd}_${hhmmss}`;
+
+        let fileName = `diff_${timestamp}.txt`;
         let type = "text/plain;charset=utf-8";
         let content = lastRenderedPatch;
 
         if (format === "html") {
-            fileName = "diff.html";
+            fileName = `diff_${timestamp}.html`;
             type = "text/html;charset=utf-8";
             content = await buildHtmlDownloadDocument(lastRenderedHtml || diffOutput.innerHTML);
         }
@@ -478,5 +499,15 @@ export function initDiffEngine({ leftEditor, rightEditor, diffOutput, safeBind, 
         }
     });
 
-    return { switchTab, compareNow };
+    function clearDiff() {
+        lastRenderedPatch = "";
+        lastRenderedHtml = "";
+        if (diffOutput) {
+            showEmptyState(diffOutput);
+            diffOutput.lastPatch = "";
+        }
+        updateSummary({ added: 0, removed: 0, modified: 0 });
+    }
+
+    return { switchTab, compareNow, clearDiff };
 }

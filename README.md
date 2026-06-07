@@ -1,7 +1,7 @@
 # 🔀 DiffBoard – Code Comparison Tool
 
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
-[![Version](https://img.shields.io/badge/Version-1.1.3-blue.svg)](#)
+[![Version](https://img.shields.io/badge/Version-1.2.0-blue.svg)](#)
 [![Chrome Extension](https://img.shields.io/badge/Chrome-Extension-green.svg?logo=google-chrome)](#)
 
 > **Tagline**: *Compare code, text, and JSON like a developer — fast, visual, and distraction-free.*
@@ -45,14 +45,15 @@ DiffBoard focuses on **clarity, speed, and usability**, without overwhelming you
   * Lines modified
 * Always visible above the diff results
 
-### 📋 Copy Utilities
+### 📋 Copy & Export Utilities
 
-* Copy **left input**
-* Copy **right input**
-* Copy **full diff**
-* Copy **only added** or **only removed** lines
-* Download the rendered comparison as `diff.txt` or `diff.html`
-* Toast notifications confirm every action
+* Copy **left input** or **right input** from editor panels
+* Consolidated **📋 Copy...** dropdown selection list:
+  * Copy **Full Diff (View)**
+  * Copy **Unified Diff Patch** (standard `.patch` output)
+  * Copy **Added (+) Lines** or **Removed (-) Lines** only
+* Download comparison results as `diff.txt` or `diff.html`
+* Instant toast alerts confirming copy success or errors
 
 ### 🧩 Format Tools
 
@@ -68,7 +69,10 @@ DiffBoard focuses on **clarity, speed, and usability**, without overwhelming you
 
 ### 🔎 Diff Workflow Tools
 
-* Find text inside the rendered diff with live match highlighting
+* Find text inside the rendered diff with live match highlighting and counts
+* **Chevron navigation arrows** (`Next` / `Prev` match) that scroll matches centered into view
+* Toggle diff rendering views between **Side-by-side** and **Unified (Line-by-line)**
+* **Context toggles** to show all lines or restrict viewport to changed sections
 * Export comparison results as plain text or HTML for ticketing and sharing
 * Ignore whitespace, case, and line-ending differences when comparing
 
@@ -139,12 +143,14 @@ DiffBoard is designed with:
 
 ### 🔷 Light Mode
 
-![Light Mode - Editor Page](./assets/screenshot/Editor%20Page-light.png)
-![Light Mode - Diff View](./assets/screenshot/Diff%20Page-light.png)
+![Main Page - Light Theme](./assets/screenshot/Main%20Page%20-%20Light%20Theme.png)
+![Keyboard Shortcuts Screen - Light Theme.png](./assets/screenshot/Keyboard%20Shortcuts%20Screen%20-%20Light%20Theme.png)
+![Diff View - Light Theme.png](./assets/screenshot/Diff%20View%20-%20Light%20Theme.png)
 
 ### 🌑 Dark Mode
 
-![Dark Mode - Editor Page](./assets/screenshot/Editor%20Page-dark.png)
+![Main Page - Dark Theme](./assets/screenshot/Main%20Page%20-%20Dark%20Theme.png)
+![Diff View - Dark Theme.png](./assets/screenshot/Diff%20View%20-%20Dark%20Theme.png)
 
 ---
 
@@ -193,19 +199,19 @@ DiffBoard is designed with:
 
 ## 🧪 Current Capabilities
 
-✔ Text, code, JSON, and config comparison
-✔ Drag-and-drop file import
-✔ Broad support for common web, config, script, and source file types
-✔ Reusable format tools
-✔ Diff statistics and copy utilities
+✔ Side-by-side or Unified line-by-line diff toggling
+✔ Drag-and-drop direct file import
+✔ High-fidelity syntax highlighting using offline static libraries (Light/Dark themes)
+✔ Non-destructive formatting, comment-stripping, and minifying using tokenizer state machines
+✔ Dynamic stats panel (+ additions, - removals, ~ changes)
+✔ Consolidated Copy selector (Full View, Patch, +, - lines)
 ✔ Downloadable diff exports in TXT and HTML formats
-✔ Search inside rendered diff results
-✔ Ignore whitespace, case, and line-ending options
-✔ Keyboard shortcuts and in-app shortcut help
-✔ Dark / light themes
-✔ Wrap toggles for editors and diff output
-✔ Loading feedback for large comparisons
-✔ Last-session editor and tab restore after refresh
+✔ Search inside rendered diffs with up/down chevron navigation and centered viewport scrolling
+✔ Ignore whitespace, case, and line-ending comparison options
+✔ Accidental reset protection (confirmation guard popups for clear events)
+✔ Keyboard shortcuts and in-app shortcut modal panel
+✔ Persistent configuration and last-session state recovery on refresh
+✔ Optional wrap line toggles for text views and comparison cards
 
 ---
 
