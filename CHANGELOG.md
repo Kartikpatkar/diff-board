@@ -9,6 +9,21 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 - _No unreleased changes._
 
+## [1.2.0] - 2026-06-07
+
+### Added
+- **Consolidated Two-Row Header Toolbar** - Redesigned the diff comparison toolbar to be highly responsive and user-friendly, organizing stats, settings, search, copy dropdowns, and download actions logically across two rows.
+- **Offline Syntax Highlighting** - Added local library support for Highlight.js code colorization (Light & Dark theme styles) complying with Manifest V3 policies.
+- **Enhanced Match Navigation** - Added search next/prev arrow chevrons to move through matches with viewport center-scrolling support.
+- **Layout Toggling** - Added runtime layout toggle selectors to view side-by-side or unified line-by-line diffs dynamically.
+- **Filtered Copy & Patch** - Combined copy actions into a clean dropdown list (`📋 Copy...`) allowing users to copy the raw view, the unified `.patch` format, only additions (`+`), or only deletions (`-`).
+- **Confirmation Safety Guard** - Prompts users before clearing non-empty editor content to prevent accidental loss of comparison work.
+- **Dirty State Auto-Compare** - Tracks editor content changes and automatically runs the comparison when navigating back to the Diff tab if editors are dirty.
+
+### Changed
+- **Stat Badge Aesthetics** - Refreshed stats tags (`+`, `-`, `~`) with soft background tints, customized borders, and theme-adaptive colors.
+- **Responsive Layout Breakpoints** - Overhauled stylesheet media queries below `900px` to naturally stack controls and span selection elements full-width for tablet and mobile devices.
+
 ## [1.1.3] - 2026-04-14
 
 ### Added
@@ -99,6 +114,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## Version History Summary
 
+- **1.2.0** (Jun 2026) - Responsive two-row Comparison Results toolbar, offline syntax highlight themes, in-diff layout toggles, consolidated filtered copy actions, chevron search navigation, and safety confirmation guards.
 - **1.1.3** (Apr 2026) - Session recovery, diff export, in-diff search, ignore options, and updated in-app guidance.
 - **1.1.2** (Apr 2026) - File drag-and-drop, expanded shortcuts, wrap controls, loading feedback, and debounced compare rendering.
 - **1.1.1** (Apr 2026) - Toolbar branding polish and finalized extension icon asset mappings.
@@ -107,8 +123,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ---
 
-[Unreleased]: https://github.com/Kartikpatkar/diff-board/compare/v1.1.3...HEAD
+[Unreleased]: https://github.com/Kartikpatkar/diff-board/compare/v1.2.0...HEAD
+[1.2.0]: https://github.com/Kartikpatkar/diff-board/compare/v1.1.3...v1.2.0
 [1.1.3]: https://github.com/Kartikpatkar/diff-board/compare/v1.1.2...v1.1.3
 [1.1.2]: https://github.com/Kartikpatkar/diff-board/compare/v1.1.1...v1.1.2
 [1.1.1]: https://github.com/Kartikpatkar/diff-board/compare/v1.1.0...v1.1.1
 [1.1.0]: https://github.com/Kartikpatkar/diff-board/compare/v1.0.1...v1.1.0
+
