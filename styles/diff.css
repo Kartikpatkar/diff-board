@@ -1,0 +1,198 @@
+/* ============================================================
+   DIFF2HTML — GLOBAL FIXES
+============================================================ */
+
+.diff-output {
+    position: relative;
+}
+
+.compare-loading {
+    position: absolute;
+    inset: 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 12px;
+    background: color-mix(in srgb, var(--surface-color) 86%, transparent);
+    color: var(--text-color);
+    font-weight: 600;
+    z-index: 5;
+}
+
+.compare-loading[hidden] {
+    display: none !important;
+}
+
+.compare-loading-spinner {
+    width: 18px;
+    height: 18px;
+    border: 2px solid rgba(37, 99, 235, 0.2);
+    border-top-color: #2563eb;
+    border-radius: 999px;
+    animation: compare-spin 0.75s linear infinite;
+}
+
+#diff2html-output.is-loading {
+    visibility: hidden;
+}
+
+@keyframes compare-spin {
+    from {
+        transform: rotate(0deg);
+    }
+
+    to {
+        transform: rotate(360deg);
+    }
+}
+
+/* Ensure full expansion */
+#diff2html-output,
+#diff2html-output .d2h-wrapper {
+    height: auto !important;
+    max-height: none !important;
+    overflow: visible !important;
+}
+
+#diff2html-output table {
+    width: 100% !important;
+    table-layout: auto !important;
+}
+
+/* Remove unnecessary overflow wrappers */
+#diff2html-output .d2h-files-diff,
+#diff2html-output .d2h-file-wrapper {
+    max-height: none !important;
+    overflow: visible !important;
+}
+
+/* Fix line numbers */
+#diff2html-output .d2h-code-linenumber,
+#diff2html-output .d2h-code-side-linenumber {
+    position: relative !important;
+    background: transparent !important;
+    color: var(--text-color) !important;
+    display: table-cell !important;
+}
+
+/* Ensure code scrolls together */
+#diff2html-output .d2h-code-line,
+#diff2html-output .d2h-code-side-line {
+    overflow: visible !important;
+    padding: 0 1.5em;
+}
+
+body.wrap-lines #diff2html-output .d2h-code-line-ctn,
+body.wrap-lines #diff2html-output .d2h-code-side-line-ctn {
+    white-space: pre-wrap !important;
+    overflow-wrap: anywhere;
+    word-break: break-word;
+}
+
+#diff2html-output mark.diff-search-hit {
+    background: rgba(245, 158, 11, 0.35);
+    color: inherit;
+    border-radius: 3px;
+    padding: 0 1px;
+}
+
+#diff2html-output mark.diff-search-hit.active-hit {
+    background: #f59e0b !important;
+    color: #0f172a !important;
+    box-shadow: 0 0 0 2px #d97706;
+    font-weight: 600;
+}
+
+body.dark-theme #diff2html-output mark.diff-search-hit {
+    background: rgba(250, 204, 21, 0.35);
+}
+
+body.dark-theme #diff2html-output mark.diff-search-hit.active-hit {
+    background: #facc15 !important;
+    color: #0f172a !important;
+    box-shadow: 0 0 0 2px #ca8a04;
+    font-weight: 600;
+}
+
+/* ============================================================
+   TOGGLE CONTEXT LINES (Show Only Differences by Default)
+============================================================ */
+/* Hide unchanged lines by default - show only differences */
+#diff2html-output.show-diff-only tbody tr:not(.has-diff):not(.d2h-info) {
+    display: none !important;
+}
+
+/* Show all lines when toggle is active */
+#diff2html-output.show-all tbody tr {
+    display: table-row !important;
+}
+
+/* ============================================================
+   DARK MODE — Diff2Html THEME FIX
+============================================================ */
+body.dark-theme #diff2html-output .d2h-wrapper {
+    background: var(--panel-bg) !important;
+}
+
+body.dark-theme #diff2html-output table {
+    background: var(--panel-bg) !important;
+}
+
+body.dark-theme #diff2html-output table tbody {
+    background: var(--panel-bg) !important;
+}
+
+body.dark-theme #diff2html-output .d2h-file-header {
+    background: var(--surface-color) !important;
+    color: var(--text-color) !important;
+    border-color: var(--border-color) !important;
+}
+
+body.dark-theme #diff2html-output .d2h-info {
+    background: rgba(60, 70, 90, 0.5) !important;
+    color: var(--text-color) !important;
+}
+
+body.dark-theme #diff2html-output .d2h-code-linenumber,
+body.dark-theme #diff2html-output .d2h-code-line,
+body.dark-theme #diff2html-output .d2h-code-side-linenumber,
+body.dark-theme #diff2html-output .d2h-code-side-line {
+    background: var(--panel-bg) !important;
+    color: var(--text-color) !important;
+}
+
+/* Blank lines and table cells */
+body.dark-theme #diff2html-output table tbody tr {
+    background: var(--panel-bg) !important;
+}
+
+body.dark-theme #diff2html-output table tbody td {
+    background: var(--panel-bg) !important;
+    color: var(--text-color) !important;
+}
+
+/* Ensure blank lines (empty cells) get dark background */
+body.dark-theme #diff2html-output .d2h-code-line-ctn,
+body.dark-theme #diff2html-output .d2h-code-side-line-ctn {
+    background: var(--panel-bg) !important;
+}
+
+/* Added lines */
+body.dark-theme #diff2html-output .d2h-ins {
+    background: rgba(16, 185, 129, 0.18) !important;
+    border-color: #10b981 !important;
+}
+
+body.dark-theme #diff2html-output ins {
+    color: #10b981 !important;
+}
+
+/* Removed lines */
+body.dark-theme #diff2html-output .d2h-del {
+    background: rgba(239, 68, 68, 0.18) !important;
+    border-color: #ef4444 !important;
+}
+
+body.dark-theme #diff2html-output del {
+    color: #ef4444 !important;
+}

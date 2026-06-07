@@ -1,0 +1,379 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>DiffBoard – Code Comparison Tool</title>
+
+    <!-- Fonts -->
+    <link
+        href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500;600&display=swap"
+        rel="stylesheet">
+
+    <!-- Base Styles -->
+    <link rel="stylesheet" href="index.css" />
+
+    <!-- Component Styles -->
+    <link rel="stylesheet" href="../styles/layout.css" />
+    <link rel="stylesheet" href="../styles/theme.css" />
+    <link rel="stylesheet" href="../styles/diff.css" />
+    <link rel="stylesheet" href="../styles/toasts.css">
+    <link rel="stylesheet" href="../styles/footer.css">
+
+    <!-- Font Awesome for icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+
+    <!-- Diff2Html Styles -->
+    <link rel="stylesheet" href="../libs/diff2html/diff2html.min.css" />
+
+    <!-- Highlight.js Styles -->
+    <link id="highlight-theme" rel="stylesheet" href="../libs/highlight/github.min.css" />
+</head>
+
+<body class="light-theme">
+    <div id="toastContainer" class="toast-container"></div>
+
+    <div class="app-container">
+
+        <!-- Top Toolbar -->
+        <header class="toolbar">
+            <div class="branding">
+                <img class="toolbar-logo" src="../assets/icons/icon-128.png" alt="DiffBoard logo">
+                <div class="branding-text">
+                    <div class="app-title">DiffBoard</div>
+                    <div class="app-tagline">Developer Diff Tool</div>
+                </div>
+            </div>
+
+            <div class="toolbar-controls">
+                <button class="toolbar-btn shortcuts-trigger" id="shortcuts-btn" type="button" aria-haspopup="dialog" aria-expanded="false" aria-controls="shortcuts-modal">
+                    Shortcuts
+                </button>
+                <label class="theme-toggle">
+                    <input type="checkbox" id="theme-toggle">
+                    <span class="slider"></span>
+                </label>
+            </div>
+        </header>
+
+        <div class="modal-backdrop" id="shortcuts-backdrop" hidden></div>
+        <section class="shortcuts-modal" id="shortcuts-modal" role="dialog" aria-modal="true" aria-labelledby="shortcuts-title" hidden>
+            <div class="shortcuts-modal-header">
+                <div>
+                    <h2 id="shortcuts-title">Keyboard shortcuts</h2>
+                    <p>Use these shortcuts anywhere in DiffBoard.</p>
+                </div>
+                <button class="toolbar-btn shortcuts-close" id="shortcuts-close" type="button" aria-label="Close shortcuts help">
+                    Close
+                </button>
+            </div>
+            <div class="shortcuts-list" aria-label="Supported keyboard shortcuts">
+                <div class="shortcut-item">
+                    <span>Compare</span>
+                    <kbd>Ctrl/Cmd + Enter</kbd>
+                </div>
+                <div class="shortcut-item">
+                    <span>Clear editors and diff</span>
+                    <kbd>Ctrl/Cmd + L</kbd>
+                </div>
+                <div class="shortcut-item">
+                    <span>Copy full diff</span>
+                    <kbd>Ctrl/Cmd + Shift + C</kbd>
+                </div>
+                <div class="shortcut-item">
+                    <span>Toggle theme</span>
+                    <kbd>Ctrl/Cmd + D</kbd>
+                </div>
+                <div class="shortcut-item">
+                    <span>Apply selected format tool</span>
+                    <kbd>Ctrl/Cmd + J</kbd>
+                </div>
+                <div class="shortcut-item">
+                    <span>Switch to Editors tab</span>
+                    <kbd>Ctrl/Cmd + 1</kbd>
+                </div>
+                <div class="shortcut-item">
+                    <span>Switch to Diff tab</span>
+                    <kbd>Ctrl/Cmd + 2</kbd>
+                </div>
+            </div>
+            <div class="shortcuts-help-section" aria-label="Diff tools reference">
+                <div class="shortcuts-help-title">Diff tools</div>
+                <div class="shortcut-item shortcut-item-info">
+                    <span>Find in diff</span>
+                    <kbd>Use the Diff search box</kbd>
+                </div>
+                <div class="shortcut-item shortcut-item-info">
+                    <span>Download Diff</span>
+                    <kbd>Export as TXT or HTML</kbd>
+                </div>
+                <div class="shortcut-item shortcut-item-info">
+                    <span>Ignore options</span>
+                    <kbd>Whitespace, case, line endings</kbd>
+                </div>
+            </div>
+        </section>
+
+        <!-- TABS -->
+        <div class="tabs">
+            <div class="tab-buttons">
+                <button class="tab-btn active" data-tab="editors-tab" id="editors-tab-btn">Editors</button>
+                <button class="tab-btn" data-tab="diff-tab" id="diff-tab-btn">Diff</button>
+            </div>
+        </div>
+
+        <!-- TAB CONTENT: EDITORS -->
+        <div id="editors-tab" class="tab-content active">
+
+            <div class="editors-container">
+                <div class="editor-panel">
+                    <div class="editor-header">
+                        <span>Original Code</span>
+                        <div class="editor-actions">
+                            <input type="file" id="file-import-left" style="display:none">
+                            <button class="btn-import" id="import-left" title="Import File">
+                                <i class="fas fa-file-import"></i>
+                                <span>Import</span>
+                            </button>
+                            <button class="btn-copy" id="copy-left" title="Copy to Clipboard">
+                                <svg width="14" height="14" viewBox="0 0 24 24" aria-hidden="true">
+                                    <use href="../assets/icons/sprite.svg#icon-copy"></use>
+                                </svg>
+                                <span>Copy</span>
+                            </button>
+                        </div>
+                    </div>
+                    <textarea id="left-editor" class="code-editor" placeholder="Paste original code here..."></textarea>
+                </div>
+
+                <div class="editor-panel">
+                    <div class="editor-header">
+                        <span>Modified Code</span>
+                        <div class="editor-actions">
+                            <input type="file" id="file-import-right" style="display:none">
+                            <button class="btn-import" id="import-right" title="Import File">
+                                <i class="fas fa-file-import"></i>
+                                <span>Import</span>
+                            </button>
+                            <button class="btn-copy" id="copy-right" title="Copy to Clipboard">
+                                <svg width="14" height="14" viewBox="0 0 24 24" aria-hidden="true">
+                                    <use href="../assets/icons/sprite.svg#icon-copy"></use>
+                                </svg>
+                                <span>Copy</span>
+                            </button>
+                        </div>
+                    </div>
+                    <textarea id="right-editor" class="code-editor"
+                        placeholder="Paste modified code here..."></textarea>
+                </div>
+            </div>
+
+            <!-- Editor Footer -->
+            <div class="editor-footer">
+                <div class="editor-footer-content">
+                    <div class="editor-footer-info">
+                        <!-- <span class="editor-status">Ready to compare</span>
+                        <span class="editor-hint">Click Compare to generate diff</span> -->
+                    </div>
+                    <div class="editor-footer-actions">
+                        <button class="btn btn-secondary" id="clear-btn">Clear</button>
+                        <button class="btn btn-secondary" id="wrap-toggle" type="button" aria-pressed="false" title="Toggle wrapped lines">
+                            Wrap
+                        </button>
+                        <div class="compare-options" aria-label="Ignore compare options">
+                            <label class="option-toggle" for="ignore-whitespace">
+                                <input type="checkbox" id="ignore-whitespace">
+                                <span>Ignore whitespace</span>
+                            </label>
+                            <label class="option-toggle" for="ignore-case">
+                                <input type="checkbox" id="ignore-case">
+                                <span>Ignore case</span>
+                            </label>
+                            <label class="option-toggle" for="ignore-line-endings">
+                                <input type="checkbox" id="ignore-line-endings">
+                                <span>Ignore line endings</span>
+                            </label>
+                        </div>
+                        <div class="format-tools-group">
+                            <select id="format-action" class="format-action-select" title="Format action">
+                                <option value="format">Format</option>
+                                <option value="minify">Minify</option>
+                                <option value="validate">Validate</option>
+                                <option value="sort-keys">Sort Keys (JSON)</option>
+                            </select>
+                            <button class="btn btn-secondary" id="format-apply" title="Apply selected format action (Ctrl/Cmd + J)">Apply Format</button>
+                        </div>
+                        <button id="swap-editors-btn" class="btn-swap" title="Swap editors">
+                            <div class="btn-swap-content">
+                                <svg width="18" height="18" viewBox="0 0 24 24" aria-hidden="true">
+                                    <use href="../assets/icons/sprite.svg#icon-swap"></use>
+                                </svg>
+                                <span>Swap</span>
+                            </div>
+                        </button>
+                        <button id="compare-btn" class="compare-btn-footer">
+                            <svg width="16" height="16" viewBox="0 0 24 24" aria-hidden="true">
+                                <use href="../assets/icons/sprite.svg#icon-compare"></use>
+                            </svg>
+                            Compare
+                        </button>
+                    </div>
+                </div>
+            </div>
+
+        </div>
+
+        <!-- TAB CONTENT: DIFF -->
+        <div id="diff-tab" class="tab-content">
+            <div class="diff-card">
+                <div class="diff-header">
+                    <!-- Row 1: Title and Main Controls -->
+                    <div class="diff-header-top-row">
+                        <div>
+                            <div class="diff-title">Comparison Results</div>
+                            <div class="diff-subtitle">Side-by-side or unified view with statistics</div>
+                        </div>
+                        <div class="summary-stats">
+                            <div class="stat-item stat-added">+ <span id="added-count">0</span></div>
+                            <div class="stat-item stat-removed">– <span id="removed-count">0</span></div>
+                            <div class="stat-item stat-modified">~ <span id="modified-count">0</span></div>
+                        </div>
+                        <div class="diff-header-primary-actions">
+                            <button class="btn btn-small btn-icon" id="swap-in-diff" title="Swap Left and Right Panels">
+                                <svg width="14" height="14" viewBox="0 0 24 24" aria-hidden="true">
+                                    <use href="../assets/icons/sprite.svg#icon-swap"></use>
+                                </svg>
+                                <span>Swap</span>
+                            </button>
+                            <button class="btn btn-small btn-icon" id="back-to-editors" title="Back to Editors">
+                                <svg width="14" height="14" viewBox="0 0 24 24" aria-hidden="true">
+                                    <use href="../assets/icons/sprite.svg#icon-back"></use>
+                                </svg>
+                                <span>Back</span>
+                            </button>
+                        </div>
+                    </div>
+
+                    <!-- Row 2: Secondary Toolbars (Settings, Search, Copy & Download Actions) -->
+                    <div class="diff-header-toolbar-row">
+                        <!-- Group 1: View Settings -->
+                        <div class="diff-toolbar-group view-settings">
+                            <select id="diff-layout-select" class="download-format-select" title="Diff layout">
+                                <option value="side-by-side">Side-by-side</option>
+                                <option value="line-by-line">Unified</option>
+                            </select>
+                            <button class="btn btn-small btn-icon" id="toggle-context" title="Toggle Context">
+                                <svg width="14" height="14" viewBox="0 0 24 24" aria-hidden="true">
+                                    <use href="../assets/icons/sprite.svg#icon-context"></use>
+                                </svg>
+                                <span>Show All</span>
+                            </button>
+                            <button class="btn btn-small btn-icon" id="wrap-toggle-diff" type="button" aria-pressed="false" title="Toggle wrapped lines in diff">
+                                <span>Wrap</span>
+                            </button>
+                        </div>
+
+                        <!-- Group 2: Centered Search Bar -->
+                        <div class="diff-search-group">
+                            <input id="diff-search" class="diff-search-input" type="search" placeholder="Find in diff">
+                            <button id="search-prev" class="search-nav-btn" type="button" title="Previous match"><i class="fas fa-chevron-up"></i></button>
+                            <button id="search-next" class="search-nav-btn" type="button" title="Next match"><i class="fas fa-chevron-down"></i></button>
+                            <span class="diff-search-count" id="diff-search-count" aria-live="polite"></span>
+                        </div>
+
+                        <!-- Group 3: Copy and Download Actions -->
+                        <div class="diff-toolbar-group actions-group">
+                            <!-- Consolidated Copy options -->
+                            <select id="copy-action-select" class="download-format-select" title="Copy to clipboard">
+                                <option value="" disabled selected>📋 Copy...</option>
+                                <option value="all">Full Diff (View)</option>
+                                <option value="patch">Unified Diff Patch</option>
+                                <option value="added">Added (+) Lines</option>
+                                <option value="removed">Removed (-) Lines</option>
+                            </select>
+
+                            <!-- Consolidated Download Group -->
+                            <div class="download-group">
+                                <select id="download-format" class="download-format-select" title="Download format">
+                                    <option value="txt">TXT</option>
+                                    <option value="html">HTML</option>
+                                </select>
+                                <button class="btn btn-small btn-icon" id="download-diff" title="Download diff">
+                                    <span>Download Diff</span>
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="diff-output">
+                    <div class="compare-loading" id="compare-loading" hidden aria-hidden="true">
+                        <div class="compare-loading-spinner" aria-hidden="true"></div>
+                        <span>Comparing...</span>
+                    </div>
+                    <div id="diff2html-output"></div>
+                </div>
+            </div>
+
+        </div>
+
+        <!-- Footer starts here -->
+        <footer class="footer">
+            <div class="footer-content">
+
+                <!-- Website name or logo -->
+                <div class="footer-logo" id="footerTitle">DiffBoard</div>
+
+                <!-- Short description or tagline -->
+                <p class="footer-text" id="tagline">Your Ultimate Diff Tool for Code Comparison</p>
+
+                <!-- Author name and credit -->
+                <div class="footer-info-row">
+                    <div class="footer-author">
+                        <i class="fas fa-code"></i> Created with ❤️ by <span id="authorDisplay">Kartik Patkar</span>
+                    </div>
+                </div>
+
+                <!-- Social media and contact links -->
+                <div class="footer-links">
+                    <a href="https://github.com/Kartikpatkar/diff-board" class="footer-link github" target="_blank">
+                        <i class="fab fa-github"></i> GitHub
+                    </a>
+                    <a href="https://www.linkedin.com/in/kartik-patkar" class="footer-link linkedin" target="_blank">
+                        <i class="fab fa-linkedin"></i> LinkedIn
+                    </a>
+                    <a href="https://www.salesforce.com/trailblazer/kpatkar1" class="footer-link trailhead" target="_blank">
+                        <i class="fab fa-salesforce"></i> Trailhead
+                    </a>
+                    <a href="mailto:kartikkp.assets@gmail.com" class="footer-link email">
+                        <i class="fas fa-envelope"></i> Email
+                    </a>
+                </div>
+
+                <!-- Horizontal divider line -->
+                <div class="footer-divider"></div>
+
+                <!-- Copyright text -->
+                <div class="footer-copyright">
+                    &copy; <span id="currentYear"></span> <span id="copyright">DiffBoard</span>
+                </div>
+            </div>
+        </footer>
+
+    </div>
+
+    <!-- Required Libraries -->
+    <script src="../libs/jsdiff/jsdiff.min.js"></script>
+    <script src="../libs/diff2html/diff2html.min.js"></script>
+    <script src="../libs/highlight/highlight.min.js"></script>
+
+    <!-- Toast Utility -->
+    <script src="../utils/toast.js"></script>
+
+    <!-- App Logic -->
+    <script type="module" src="index.js"></script>
+
+</body>
+
+</html>
