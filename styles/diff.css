@@ -96,8 +96,22 @@ body.wrap-lines #diff2html-output .d2h-code-side-line-ctn {
     padding: 0 1px;
 }
 
+#diff2html-output mark.diff-search-hit.active-hit {
+    background: #f59e0b !important;
+    color: #0f172a !important;
+    box-shadow: 0 0 0 2px #d97706;
+    font-weight: 600;
+}
+
 body.dark-theme #diff2html-output mark.diff-search-hit {
     background: rgba(250, 204, 21, 0.35);
+}
+
+body.dark-theme #diff2html-output mark.diff-search-hit.active-hit {
+    background: #facc15 !important;
+    color: #0f172a !important;
+    box-shadow: 0 0 0 2px #ca8a04;
+    font-weight: 600;
 }
 
 /* ============================================================

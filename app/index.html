@@ -26,6 +26,9 @@
 
     <!-- Diff2Html Styles -->
     <link rel="stylesheet" href="../libs/diff2html/diff2html.min.css" />
+
+    <!-- Highlight.js Styles -->
+    <link id="highlight-theme" rel="stylesheet" href="../libs/highlight/github.min.css" />
 </head>
 
 <body class="light-theme">
@@ -128,6 +131,11 @@
                     <div class="editor-header">
                         <span>Original Code</span>
                         <div class="editor-actions">
+                            <input type="file" id="file-import-left" style="display:none">
+                            <button class="btn-import" id="import-left" title="Import File">
+                                <i class="fas fa-file-import"></i>
+                                <span>Import</span>
+                            </button>
                             <button class="btn-copy" id="copy-left" title="Copy to Clipboard">
                                 <svg width="14" height="14" viewBox="0 0 24 24" aria-hidden="true">
                                     <use href="../assets/icons/sprite.svg#icon-copy"></use>
@@ -139,10 +147,15 @@
                     <textarea id="left-editor" class="code-editor" placeholder="Paste original code here..."></textarea>
                 </div>
 
-            <div class="editor-panel">
+                <div class="editor-panel">
                     <div class="editor-header">
                         <span>Modified Code</span>
                         <div class="editor-actions">
+                            <input type="file" id="file-import-right" style="display:none">
+                            <button class="btn-import" id="import-right" title="Import File">
+                                <i class="fas fa-file-import"></i>
+                                <span>Import</span>
+                            </button>
                             <button class="btn-copy" id="copy-right" title="Copy to Clipboard">
                                 <svg width="14" height="14" viewBox="0 0 24 24" aria-hidden="true">
                                     <use href="../assets/icons/sprite.svg#icon-copy"></use>
@@ -221,6 +234,8 @@
                     </div>
                     <div class="diff-search-group">
                         <input id="diff-search" class="diff-search-input" type="search" placeholder="Find in diff">
+                        <button id="search-prev" class="search-nav-btn" type="button" title="Previous match"><i class="fas fa-chevron-up"></i></button>
+                        <button id="search-next" class="search-nav-btn" type="button" title="Next match"><i class="fas fa-chevron-down"></i></button>
                         <span class="diff-search-count" id="diff-search-count" aria-live="polite"></span>
                     </div>
                     <div class="summary-stats">
@@ -239,11 +254,22 @@
                             <span>Wrap</span>
                         </button>
                         <div class="divider"></div>
+                        <select id="diff-layout-select" class="download-format-select" title="Diff layout">
+                            <option value="side-by-side">Side-by-side</option>
+                            <option value="line-by-line">Unified</option>
+                        </select>
+                        <div class="divider"></div>
                         <button class="btn btn-small btn-icon" id="copy-diff" title="Copy All">
                             <svg width="14" height="14" viewBox="0 0 24 24" aria-hidden="true">
                                 <use href="../assets/icons/sprite.svg#icon-copy"></use>
                             </svg>
                             <span>Copy All</span>
+                        </button>
+                        <button class="btn btn-small btn-icon" id="copy-patch" title="Copy Unified Patch">
+                            <svg width="14" height="14" viewBox="0 0 24 24" aria-hidden="true">
+                                <use href="../assets/icons/sprite.svg#icon-copy"></use>
+                            </svg>
+                            <span>Copy Patch</span>
                         </button>
                         <div class="download-group">
                             <select id="download-format" class="download-format-select" title="Download format">
@@ -336,6 +362,7 @@
     <!-- Required Libraries -->
     <script src="../libs/jsdiff/jsdiff.min.js"></script>
     <script src="../libs/diff2html/diff2html.min.js"></script>
+    <script src="../libs/highlight/highlight.min.js"></script>
 
     <!-- Toast Utility -->
     <script src="../utils/toast.js"></script>
