@@ -139,7 +139,7 @@ export function initApp() {
         }
         leftEditor.value = "";
         rightEditor.value = "";
-        diffOutput.innerHTML = "";
+        diffEngine.clearDiff();
 
         try {
             localStorage.removeItem(LEFT_EDITOR_STORAGE_KEY);
