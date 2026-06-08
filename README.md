@@ -83,14 +83,9 @@ DiffBoard focuses on **clarity, speed, and usability**, without overwhelming you
 * Restores the active Editors/Diff tab
 * Keeps theme preference between sessions
 
-### 🗂️ Supported File Types
+### 🗂️ Supported Formats
 
-* Text and logs: `.txt`, `.log`, `.md`, `.csv`
-* Web and markup: `.html`, `.htm`, `.css`, `.scss`, `.sass`, `.less`, `.xml`
-* JSON and config: `.json`, `.yaml`, `.yml`, `.ini`, `.conf`
-* JavaScript and TypeScript: `.js`, `.ts`, `.jsx`, `.tsx`
-* Common backend and scripting files: `.py`, `.java`, `.cs`, `.php`, `.rb`, `.go`, `.rs`, `.sh`, `.bat`, `.ps1`
-* C-family and headers: `.c`, `.cc`, `.cpp`, `.h`, `.hpp`, `.cls`
+DiffBoard supports syntax highlighting and formatting for a wide variety of development, configuration, and markup formats, including JavaScript, TypeScript, HTML, CSS, JSON, YAML, XML, Markdown, Python, Java, C/C++, C#, Shell scripts, and plain text.
 
 ### ⌨️ Keyboard Shortcuts
 
