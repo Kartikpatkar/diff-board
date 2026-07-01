@@ -9,7 +9,17 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 - _No unreleased changes._
 
-## [1.2.0] - 2026-06-07
+## [1.3.0] - 2026-07-01
+
+### Added
+- **🔀 Interactive Compare Workspace (3rd Tab)** - A complete, VS Code-style side-by-side editing and merge resolution panel.
+- **Block-Level Gutter Merging** - Visual merge arrows (`←` / `→`) in the editor gutter for fast block-by-block difference resolving.
+- **Scroll Synchronization** - Intelligent proportional scroll sync maps corresponding changed line blocks accurately across panels.
+- **Jump Navigation** - Navigation controls (toolbar buttons & `F7` / `Shift+F7` keyboard hotkeys) centering and highlighting active changes.
+- **Live Debounced Diffs** - Calculations automatically update diff boundaries as you type, debounced at 300ms to maintain speed.
+- **Undo / Redo History Stack** - Track and reverse merge decisions dynamically with `Ctrl+Z` / `Ctrl+Y` shortcut commands.
+- **State Action Dropdown** - Bulk merge actions ("Accept All Left", "Accept All Right", "Reset Workspace").
+- **Unified Export Controls** - Clean dropdown containing actions to copy, download, or copy back to the Editors workspace for either pane.
 
 ### Added
 - **Consolidated Two-Row Header Toolbar** - Redesigned the diff comparison toolbar to be highly responsive and user-friendly, organizing stats, settings, search, copy dropdowns, and download actions logically across two rows.

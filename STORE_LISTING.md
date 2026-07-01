@@ -10,6 +10,7 @@ Whether you are comparing API responses, reviewing database queries, or analyzin
 
 ### Key Features
 
+* **Interactive Compare Workspace:** Use the side-by-side editable merge editor to resolve differences block-by-block using gutter arrows (`←` / `→`) or keyboard shortcuts (`Alt + Left/Right Arrow`).
 * **Flexible Diff Layouts:** Switch between split side-by-side and unified single-column views on demand to review changes in the format you prefer.
 * **Safe Format & Minification:** Format, minify, validate, or sort key hierarchies safely using robust, tokenizer-based state machines that preserve string values, URLs, and comments.
 * **Offline Syntax Highlighting:** Highlights code keywords and markup syntax locally using embedded static stylesheets for both dark and light workspace themes.

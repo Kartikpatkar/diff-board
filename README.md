@@ -1,7 +1,7 @@
 # 🔀 DiffBoard – Code Comparison Tool
 
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
-[![Version](https://img.shields.io/badge/Version-1.2.0-blue.svg)](#)
+[![Version](https://img.shields.io/badge/Version-1.3.0-blue.svg)](#)
 [![Chrome Extension](https://img.shields.io/badge/Chrome-Extension-green.svg?logo=google-chrome)](#)
 
 > **Tagline**: *Compare code, text, and JSON like a developer — fast, visual, and distraction-free.*
@@ -94,7 +94,10 @@ DiffBoard supports syntax highlighting and formatting for a wide variety of deve
 * `Ctrl/Cmd + Shift + C` → Copy diff
 * `Ctrl/Cmd + D` → Toggle theme
 * `Ctrl/Cmd + J` → Apply selected format tool
-* `Ctrl/Cmd + 1 / 2` → Switch between Editors and Diff tabs
+* `Ctrl/Cmd + 1 / 2 / 3` → Switch between Editors, Diff, and Compare tabs
+* `F7` / `Shift + F7` → Next / Prev change block (in Compare tab)
+* `Alt + Left/Right Arrow` → Merge selected block Left/Right (in Compare tab)
+* `Ctrl/Cmd + Z / Y` → Undo / Redo merge action (in Compare tab)
 * Built-in shortcuts help modal available from the toolbar
 
 ### 🪄 Better Large-File UX
@@ -111,8 +114,18 @@ DiffBoard supports syntax highlighting and formatting for a wide variety of deve
 
 ### 🧭 Tab-Based Workflow
 
-* Input View – paste and edit content
-* Diff View – focus on comparison results
+* **Editors** – paste, import, and format text content
+* **Diff** – focus on read-only comparison results and export unified patch formats
+* **Compare** – interactive side-by-side workspace to resolve merges block-by-block
+
+### 🔀 Interactive Compare Workspace
+
+* **Live Side-by-Side Editing** – Make adjustments in either pane with live debounced diff calculations (300ms)
+* **Block-Level Merging** – Resolve individual differences visually with gutter arrows (`←` / `→`) or keyboard shortcuts (`Alt + Left/Right Arrow`)
+* **Jump Navigation** – Step through changes instantly using toolbar chevrons or keyboard hotkeys (`F7` / `Shift + F7`)
+* **Undo & Redo Merge History** – Step backward and forward through resolving changes using standard history binds (`Ctrl + Z` / `Ctrl + Y`)
+* **State Actions** – Bulk accept left/right edits or reset the workspace with one click from a consolidated dropdown
+* **Scroll Sync** – Experience proportional block-aligned scroll synchronization across both panes
 
 ### 🧼 Clear & Reset
 
@@ -207,12 +220,13 @@ DiffBoard is designed with:
 ✔ Keyboard shortcuts and in-app shortcut modal panel
 ✔ Persistent configuration and last-session state recovery on refresh
 ✔ Optional wrap line toggles for text views and comparison cards
+✔ Interactive Compare Workspace with block-level gutter merging and change navigation
 
 ---
 
 ## 🛣️ Roadmap (Planned Enhancements)
 
-* 🧠 **VS Code–style Compare View**
+* [x] 🧠 **VS Code–style Compare View** (Released in v1.3.0)
 * 🔗 Shareable diff export
 * 📌 Save comparison history
 * 💾 Remember recent comparisons
