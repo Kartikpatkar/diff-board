@@ -198,6 +198,7 @@ export function initEditorActions({ leftEditor, rightEditor, diffOutput, safeBin
 
             try {
                 editor.value = await readFileAsText(file);
+                editor.dataset.fileName = file.name;
                 editor.dispatchEvent(new Event("input", { bubbles: true }));
                 showToast?.("File Loaded", `${file.name} loaded into ${label}`, "success");
             } catch (error) {
@@ -227,6 +228,7 @@ export function initEditorActions({ leftEditor, rightEditor, diffOutput, safeBin
 
             try {
                 editor.value = await readFileAsText(file);
+                editor.dataset.fileName = file.name;
                 editor.dispatchEvent(new Event("input", { bubbles: true }));
                 showToast?.("File Loaded", `${file.name} loaded into ${label}`, "success");
             } catch (error) {

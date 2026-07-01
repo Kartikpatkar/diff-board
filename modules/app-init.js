@@ -4,6 +4,7 @@ import { registerKeyboardShortcuts } from "./keyboard-shortcuts.js";
 import { initDiffEngine } from "./diff-engine.js";
 import { initEditorActions } from "./editor-actions.js";
 import { initUi } from "./ui-init.js";
+import { initCompareWorkspace } from "./compare-workspace.js";
 
 const LEFT_EDITOR_STORAGE_KEY = "editor-left-content";
 const RIGHT_EDITOR_STORAGE_KEY = "editor-right-content";
@@ -37,6 +38,17 @@ export function initApp() {
         safeBind,
         showToast,
         onAfterSwap: () => diffEngine.compareNow()
+    });
+
+    const compareWorkspace = initCompareWorkspace({
+        leftEditor,
+        rightEditor,
+        showToast
+    });
+
+    // Load compare content when switching to Compare tab
+    safeBind("compare-tab-btn", () => {
+        compareWorkspace?.loadFromEditors();
     });
 
     function restoreEditorSession() {
@@ -162,6 +174,10 @@ export function initApp() {
         onToggleTheme: () => ui?.toggleTheme?.(),
         onApplyFormat: runFormatAction,
         onSwitchToEditors: () => diffEngine.switchTab("editors"),
-        onSwitchToDiff: () => diffEngine.switchTab("diff")
+        onSwitchToDiff: () => diffEngine.switchTab("diff"),
+        onSwitchToCompare: () => {
+            diffEngine.switchTab("compare");
+            compareWorkspace?.loadFromEditors();
+        }
     });
 }

@@ -8,7 +8,8 @@ export function registerKeyboardShortcuts({
     onToggleTheme,
     onApplyFormat,
     onSwitchToEditors,
-    onSwitchToDiff
+    onSwitchToDiff,
+    onSwitchToCompare
 }) {
     document.addEventListener("keydown", (e) => {
         const mod = e.ctrlKey || e.metaKey;
@@ -60,6 +61,12 @@ export function registerKeyboardShortcuts({
         if (e.key === "2") {
             e.preventDefault();
             onSwitchToDiff?.();
+            return;
+        }
+
+        if (e.key === "3") {
+            e.preventDefault();
+            onSwitchToCompare?.();
             return;
         }
     });

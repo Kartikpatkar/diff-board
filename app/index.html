@@ -20,6 +20,7 @@
     <link rel="stylesheet" href="../styles/diff.css" />
     <link rel="stylesheet" href="../styles/toasts.css">
     <link rel="stylesheet" href="../styles/footer.css">
+    <link rel="stylesheet" href="../styles/compare.css">
 
     <!-- Font Awesome for icons -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
@@ -97,6 +98,10 @@
                     <span>Switch to Diff tab</span>
                     <kbd>Ctrl/Cmd + 2</kbd>
                 </div>
+                <div class="shortcut-item">
+                    <span>Switch to Compare tab</span>
+                    <kbd>Ctrl/Cmd + 3</kbd>
+                </div>
             </div>
             <div class="shortcuts-help-section" aria-label="Diff tools reference">
                 <div class="shortcuts-help-title">Diff tools</div>
@@ -120,6 +125,7 @@
             <div class="tab-buttons">
                 <button class="tab-btn active" data-tab="editors-tab" id="editors-tab-btn">Editors</button>
                 <button class="tab-btn" data-tab="diff-tab" id="diff-tab-btn">Diff</button>
+                <button class="tab-btn" data-tab="compare-tab" id="compare-tab-btn">Compare</button>
             </div>
         </div>
 
@@ -316,6 +322,169 @@
                 </div>
             </div>
 
+        </div>
+
+        <!-- TAB CONTENT: COMPARE -->
+        <div id="compare-tab" class="tab-content">
+            <div class="compare-workspace">
+
+                <!-- Compare Toolbar -->
+                <div class="compare-toolbar">
+                    <div class="compare-toolbar-group">
+                        <button class="btn-compare-action btn-accent" id="compare-run-btn" title="Run comparison">
+                            <i class="fas fa-sync-alt"></i> Compare
+                        </button>
+                        <button class="compare-nav-btn" id="compare-prev-change" title="Previous change (F7)">
+                            <i class="fas fa-chevron-up"></i>
+                        </button>
+                        <button class="compare-nav-btn" id="compare-next-change" title="Next change (Shift+F7)">
+                            <i class="fas fa-chevron-down"></i>
+                        </button>
+                        <button class="compare-nav-btn" id="compare-undo-btn" title="Undo (Ctrl+Z)" disabled>
+                            <i class="fas fa-undo"></i>
+                        </button>
+                        <button class="compare-nav-btn" id="compare-redo-btn" title="Redo (Ctrl+Y)" disabled>
+                            <i class="fas fa-redo"></i>
+                        </button>
+                    </div>
+
+                    <div class="compare-toolbar-divider"></div>
+
+                    <div class="compare-toolbar-group compare-change-stats">
+                        <span class="compare-stat compare-stat-added" id="compare-stat-added" title="Added lines (click to jump to first)">+0</span>
+                        <span class="compare-stat compare-stat-removed" id="compare-stat-removed" title="Removed lines (click to jump to first)">−0</span>
+                        <span class="compare-stat compare-stat-modified" id="compare-stat-modified" title="Modified lines (click to jump to first)">~0</span>
+                    </div>
+
+                    <div class="compare-toolbar-divider"></div>
+
+                    <div class="compare-toolbar-group">
+                        <select id="compare-ignore-select" class="download-format-select" title="Compare options">
+                            <option value="none">🔍 Default Compare</option>
+                            <option value="ignore-ws">Ignore Whitespace</option>
+                            <option value="ignore-case">Ignore Case</option>
+                            <option value="ignore-both">Ignore Both</option>
+                        </select>
+                    </div>
+
+                    <div class="compare-toolbar-divider"></div>
+
+                    <div class="compare-toolbar-group">
+                        <button class="btn-compare-action" id="compare-wrap-toggle" title="Toggle word wrap">
+                            Wrap
+                        </button>
+                        <button class="btn-compare-action is-active" id="compare-auto-toggle" title="Auto-compare on edit">
+                            Auto
+                        </button>
+                    </div>
+
+                    <div class="compare-toolbar-divider"></div>
+
+                    <div class="compare-toolbar-group">
+                        <button class="btn-compare-action" id="compare-swap-btn" title="Swap left and right">
+                            <i class="fas fa-exchange-alt"></i> Swap
+                        </button>
+                    </div>
+
+                    <div class="compare-toolbar-divider"></div>
+
+                    <!-- Merge Actions Group -->
+                    <div class="compare-toolbar-group">
+                        <select id="compare-merge-action-select" class="download-format-select" title="Merge actions">
+                            <option value="" disabled selected>⚡ Merge All...</option>
+                            <option value="accept-all-right">Accept All (Left → Right)</option>
+                            <option value="accept-all-left">Accept All (Right → Left)</option>
+                            <option value="reset">Reset Workspace</option>
+                        </select>
+                    </div>
+
+                    <div class="compare-toolbar-divider"></div>
+
+                    <!-- Export Group -->
+                    <div class="compare-toolbar-group">
+                        <select id="compare-export-select" class="download-format-select" title="Export results">
+                            <option value="" disabled selected>📤 Export...</option>
+                            <option value="copy-left">📋 Copy Left Editor</option>
+                            <option value="copy-right">📋 Copy Right Editor</option>
+                            <option value="download-left">💾 Download Left Editor</option>
+                            <option value="download-right">💾 Download Right Editor</option>
+                            <option value="open-left-editors">✏️ Open Left in Editors</option>
+                            <option value="open-right-editors">✏️ Open Right in Editors</option>
+                        </select>
+                    </div>
+
+                    <div class="compare-toolbar-divider"></div>
+
+                    <div class="compare-toolbar-group compare-search-group">
+                        <input type="search" class="compare-search-input" id="compare-search-input" placeholder="Find...">
+                        <span class="compare-search-count" id="compare-search-count"></span>
+                    </div>
+                </div>
+
+                <!-- Editors Area -->
+                <div class="compare-editors-area">
+
+                    <!-- Left Editor -->
+                    <div class="compare-editor-panel">
+                        <div class="compare-file-info" id="compare-left-file-info">
+                            <span class="compare-file-name">Original</span>
+                            <div class="compare-file-meta">
+                                <span>0 B</span>
+                                <span>0 lines</span>
+                            </div>
+                        </div>
+                        <div class="compare-editor-wrapper">
+                            <div class="compare-line-decorations" id="compare-left-decorations"></div>
+                            <textarea id="compare-left-editor" class="compare-editor" placeholder="Original code loads here..."></textarea>
+                        </div>
+                    </div>
+
+                    <!-- Merge Gutter -->
+                    <div class="compare-gutter-panel">
+                        <div class="compare-gutter-header"></div>
+                        <div class="compare-merge-gutter" id="compare-merge-gutter">
+                            <div class="compare-merge-gutter-placeholder">MERGE</div>
+                        </div>
+                    </div>
+
+                    <!-- Right Editor -->
+                    <div class="compare-editor-panel">
+                        <div class="compare-file-info" id="compare-right-file-info">
+                            <span class="compare-file-name">Modified</span>
+                            <div class="compare-file-meta">
+                                <span>0 B</span>
+                                <span>0 lines</span>
+                            </div>
+                        </div>
+                        <div class="compare-editor-wrapper">
+                            <div class="compare-line-decorations" id="compare-right-decorations"></div>
+                            <textarea id="compare-right-editor" class="compare-editor" placeholder="Modified code loads here..."></textarea>
+                        </div>
+                    </div>
+
+                </div>
+
+                <!-- Status Bar -->
+                <div class="compare-status-bar">
+                    <div class="compare-status-group">
+                        <div class="compare-status-item">
+                            <span class="compare-status-label">Lines</span>
+                            <span class="compare-status-value" id="compare-status-lines">0 / 0</span>
+                        </div>
+                        <div class="compare-status-item">
+                            <span class="compare-status-label">Changes</span>
+                            <span class="compare-status-value" id="compare-status-changes">0</span>
+                        </div>
+                    </div>
+                    <div class="compare-status-group">
+                        <div class="compare-status-item">
+                            <span class="compare-status-label">Cursor</span>
+                            <span class="compare-status-value" id="compare-status-cursor">Ln 1, Col 1</span>
+                        </div>
+                    </div>
+                </div>
+
+            </div>
         </div>
 
         <!-- Footer starts here -->

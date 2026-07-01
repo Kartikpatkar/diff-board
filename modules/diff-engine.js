@@ -324,9 +324,13 @@ export function initDiffEngine({ leftEditor, rightEditor, diffOutput, safeBind, 
     }
 
     function switchTab(target) {
+        const compareSection = document.getElementById("compare-tab");
+        const compareTabButton = document.querySelector('[data-tab="compare-tab"]');
+
         tabs.forEach((t) => t.classList.remove("active"));
         editorsSection?.classList.remove("active");
         diffSection?.classList.remove("active");
+        compareSection?.classList.remove("active");
 
         if (target === "editors") {
             editorsTabButton?.classList.add("active");
@@ -335,6 +339,9 @@ export function initDiffEngine({ leftEditor, rightEditor, diffOutput, safeBind, 
             diffTabButton?.classList.add("active");
             diffSection?.classList.add("active");
             if (diffSection) diffSection.scrollTop = 0;
+        } else if (target === "compare") {
+            compareTabButton?.classList.add("active");
+            compareSection?.classList.add("active");
         }
 
         try {
@@ -469,6 +476,7 @@ export function initDiffEngine({ leftEditor, rightEditor, diffOutput, safeBind, 
         }
     });
     safeBind("back-to-editors", () => switchTab("editors"));
+    safeBind("compare-tab-btn", () => switchTab("compare"));
     safeBind("toggle-context", toggleContextMode);
     safeBind("compare-btn", compareNow);
     safeBind("download-diff", () => {
